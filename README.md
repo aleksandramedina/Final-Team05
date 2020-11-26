@@ -15,15 +15,15 @@
   - in-text citations
   
   
-  ### Outline
+### Outline
   
-  - 2-3 pages
-  - the chosen research question
-  - a list of resources
-  - a brief overview of analysis
+- 2-3 pages
+- the chosen research question
+- a list of resources
+- a brief overview of analysis
   
   
-  ### Presentation
+### Presentation
   
-  - prepare deck
-  - 5-10 minutes
+- prepare deck
+- 5-10 minutes
