@@ -1,0 +1,17 @@
+---
+title: "Final Project"
+author: "Team 5"
+date: "December 8, 2020"
+output: github_document
+---
+
+```{r load-packages, message=FALSE}
+library(tidyverse) 
+library(dsbox) 
+```
+
+```{r load-data, message=FALSE}
+covid <- read_csv("data.csv")
+# glimpse(covid)
+names(covid)
+```
