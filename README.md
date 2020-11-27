@@ -27,3 +27,21 @@
   
 - prepare deck
 - 5-10 minutes
+
+
+### Brainstorming, Novemebr 27
+
+- number of beds
+- **number of tests**
+- **classify countries by income** & hospital beds
+
+
+
+- **population density**
+- migration % share
+- air travel / mobility / transit
+
+
+- **testing C1-C8**
+
+Research Question: How do lockdown measures affect Covid-19 mortality?
