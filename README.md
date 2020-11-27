@@ -44,4 +44,4 @@
 
 - **testing C1-C8**
 
-Research Question: How do lockdown measures affect Covid-19 mortality?
+### Research Question: How do lockdown measures affect Covid-19 mortality?
