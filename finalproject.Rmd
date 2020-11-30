@@ -10,8 +10,120 @@ library(tidyverse)
 library(dsbox) 
 ```
 
-```{r load-data, message=FALSE}
+```{r covid}
 covid <- read_csv("data.csv")
 # glimpse(covid)
-names(covid)
+ names(covid)
+```
+
+```{r covid_america}
+
+# Filter for the Americas 
+
+  covid_america <- covid %>%
+  filter(continent == "America")
+  nrow(covid_america)
+  
+covid_america
+```
+
+```{r deaths_cum, cases_cum}
+
+# Map initial glimpse of the data: cumulative deaths & cumulative cases
+
+covid_america %>%
+  ggplot(
+    mapping = aes(x= deaths_cum,
+                  y = cases_cum)) +
+    geom_point()
+  
+```
+
+```{r new_covid_america, filter USA}
+
+# There are two obvious outliers - will remove them to enable a closer analysis. Remove by filtering cumulative cases < 2,500,000
+
+new_covid_america <- covid_america %>% filter (cases_cum < 2500000) 
+  
+```
+
+```{r new_covid_america, first plot}
+
+# Plot again cumulative cases and cumulative deaths with the new data set
+
+new_covid_america %>%
+  ggplot(
+    mapping = aes(x= deaths_cum,
+                  y = cases_cum)) +
+    geom_point()
+  
+```
+
+```{r pop_older mortality older_share}
+# Create a new variable for population over 65
+# Create a new variable for mortality rate
+# Now check for the variables that we are researching cumulative cases, cumulative deaths, population density, migration share
+
+new_covid_america <- transform(new_covid_america, 
+                               pop_older = older_m + older_f
+                               )
+
+new_covid_america <- transform(new_covid_america,
+                              older_share = (pop_older / population_2019)*100
+                              )
+
+new_covid_america <- transform(new_covid_america, 
+                              mortality = (deaths_cum / cases_cum)*100
+                              )
+
+```
+
+
+```{r new_covid_america, second plot}
+  new_covid_america %>%
+  ggplot(
+    mapping = aes(x=pop_older,
+                  y = mortality)) +
+  geom_point()
+    
+```
+
+```{r pop_older mortality point plot}
+
+# Filter the different regions: Latin America & Caribbean, North America
+  new_covid_america %>%
+  ggplot(
+    mapping = aes(x=pop_older,
+                  y = mortality,
+                  color = region,
+                  fill = region)) +
+  geom_point()  
+
+```
+
+```{r older_share mortality migration_share density plot}
+
+# geom point is not the best representation since a many points cover each other
+
+  new_covid_america %>%
+  ggplot(
+    mapping = aes(x=older_share,
+                  color = region,
+                  fill = region)) +
+  geom_density(alpha = 0.4)  
+
+  new_covid_america %>%
+  ggplot(
+    mapping = aes(x=mortality,
+                  color = region,
+                  fill = region)) +
+  geom_density(alpha = 0.4)  
+  
+  new_covid_america %>%
+  ggplot(
+    mapping = aes(x=migration_share,
+                  color = region,
+                  fill = region)) +
+  geom_density(alpha = 0.4)  
+
 ```
