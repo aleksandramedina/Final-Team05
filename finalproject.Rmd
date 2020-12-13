@@ -1,5 +1,5 @@
 ---
-title: "Final Project"
+title: "How does the proportion of people aged 65+ affect Covid-19 mortality across continents?"
 author: "Team 5"
 date: "December 8, 2020"
 output: github_document
@@ -8,13 +8,33 @@ output: github_document
 ```{r load-packages, message=FALSE}
 library(tidyverse) 
 library(dsbox) 
+install.packages("magrittr") 
+install.packages("dplyr")    
+library(magrittr)
+library(dplyr) 
+install.packages("tufte")
+library(ggplot2)
 ```
+
+The research done and data provided by WZB, Institutions and Political Inequality Group stands out due to its detailed annotation. However, even more commendable is its complete transparency with the data collected and the way it has been manipulated. This empowers readers to, firstly, gain a deeper understanding of the results and the workings of statistical models, and, secondly, contribute with their own analysis.
+
+This is exactly what my teammates and I did. The process is a lengthy one and filled with trial and error. Firstly, one must go through all the variables and understand what they entail. This resulted in 132 columns.
 
 ```{r covid}
 covid <- read_csv("data.csv")
-# glimpse(covid)
- names(covid)
+# names(covid)
 ```
+
+Then the team ran through the data set to see its structure. Going through the table produced, the team decided how to equally distribute the workload. It made sense to distribute geographically. We divided the world into three vertical strips: 
+
+- North America, Central America and South America,
+
+- Europe and Africa,
+
+- Asia, Oceania and Australia.
+
+
+I chose to analyze the first part: North America, Central America and South America. To do this, the data set had to be filtered for these three values and saved into a new variable. After skimming through the data, I realized that countries belonging to all three parts are saved under the same category for continent = America. The data set was filtered for countries, where the continent value is set equal to America and then saved into a new variable.
 
 ```{r covid_america}
 
@@ -27,6 +47,8 @@ covid <- read_csv("data.csv")
 covid_america
 ```
 
+The new data set has 48 countries saved into rows and the same 132 variables saved into columns. For initial glimpse of the data at hand, I plotted a simple point graph, which visualizes the relationship between cumulative cases and cumulative deaths in the Americas to see if there seems to be a pattern. 
+
 ```{r deaths_cum, cases_cum}
 
 # Map initial glimpse of the data: cumulative deaths & cumulative cases
@@ -35,17 +57,34 @@ covid_america %>%
   ggplot(
     mapping = aes(x= deaths_cum,
                   y = cases_cum)) +
+  theme_bw()+
+  labs(y="Cumulative cases", x="Cumulative deaths")+
+  ggtitle("Cumulative cases vs Cumulative deaths in the Americas")+
+  scale_x_log10()+
     geom_point()
   
 ```
+
+Immediately after plotting this, it is obvious there are two extreme outliers. This skews the plot, not allowing for careful examination of the majority of values. These two values must be omitted. To do so a new value is created, where only variables with cumulative cases below 2,500,000 are saved. Another variable is created that saves the two outliers to see who these two countries are. Unsurprisingly, the country with the most cumulative Covid-19 cases is the United States with 12,089,438 cumulative cases (at the time, when the data was collected). The second country is Brazil with 6,052,786 cumulative cases (at the time, when the data was collected).
 
 ```{r new_covid_america, filter USA}
 
 # There are two obvious outliers - will remove them to enable a closer analysis. Remove by filtering cumulative cases < 2,500,000
 
 new_covid_america <- covid_america %>% filter (cases_cum < 2500000) 
-  
+outliers <- covid_america %>% filter (cases_cum > 2500000)
+
+outliers
 ```
+
+Now it is possible to delve into a more detailed analysis of the remaining 46 countries spanning the Americas. However, the process was not as smooth as one might think. When brainstorming, which variables might be of interest for the team’s analysis, we decided to analyze lockdown measures as this is something that acutely affects all of us and frequents media headlines. After settling on the lockdown variables, I started running through the data for the Americas. I quickly realized that nearly all values for the lockdown variables were missing and marked N/A. The data set had been created too early on in the pandemic to incorporate data reflecting lockdown measures and their effectiveness. 
+
+This idea was quickly scrapped and we had to move on to measuring different variables. This time we immediately made sure that the variables we are interested in had sufficient amounts of valid values. As a team, we decided that we want to focus on variables measuring the specificities in populations across the world as this might offer interesting insights about human diversity across the globe. Thus, we settled on measuring how the proportion of people aged 65+ affects Covid-19 mortality across the globe.
+
+To do this, I started with the initial step of measuring Covid-19 mortality. In this paper, Covid-19 mortality is measured as the proportion of cumulative deaths when measured against cumulative cases. Of course one must keep in mind the limitations, when measuring and defining these two variables as different governments around the world report data based on different definitions.
+
+After plotting the two variables against each other, a clearer pattern emerges. If mortality is measured as the slope of the graph, where the x value is the number of cumulative cases and the y value is the number of cumulative deaths, there seems to be a linear relationship until a certain point (around 1,000,000 and 1,500,000 cumulative cases), where mortality plateaus. There are definitely too few countries with high cumulative death numbers to trust this pattern. Therefore, a similar process has to be repeated, where the outlier has to be filtered out (after creating a separate variable, we find the outlying country with cumulative deaths greater than 7,500,000 is Mexico). Now plotting the new variable that does not entail Mexico, the relationship is obviously linear. We learn that, in the Americas, cumulative deaths are proportionally related to cumulative cases. From here further research discussing the implications and related policies from governments could be done.
+
 
 ```{r new_covid_america, first plot}
 
@@ -55,14 +94,55 @@ new_covid_america %>%
   ggplot(
     mapping = aes(x= deaths_cum,
                   y = cases_cum)) +
-    geom_point()
+  theme_bw()+
+  
+  labs(y="Cumulative cases", x="Cumulative deaths")+
+  ggtitle("Cumulative cases vs Cumulative deaths in the Americas, excluding outliers")+
+  
+  geom_point()+
+  stat_smooth(method="lm")
+
+outlier_deaths <- new_covid_america %>% filter (deaths_cum > 75000)
+outlier_deaths
+
+
+
+new_covid_america_without_outlier <- new_covid_america %>% filter (deaths_cum < 75000)
+new_covid_america_without_outlier %>%
+  ggplot(
+    mapping = aes(x= deaths_cum,
+                  y = cases_cum)) +
+  theme_bw()+
+  
+  labs(y="Cumulative cases", x="Cumulative deaths")+
+  ggtitle("Cumulative cases vs Cumulative deaths in the Americas, excluding outliers")+
+  
+  geom_point()+
+  stat_smooth(method="lm")
   
 ```
+
+Now after defining and analyzing mortality and its relationship to cumulative cases and cumulative deaths, we can move on to the variables analyzed in this paper. For this, three variables are added to the dataset. Firstly, we must create a new variable that combines both the female population that is 65+ and the male population that is 65+. Then, we must look at the share of the population that is 65+ against the total population of a country. This is saved into a new variable too. Here we also define mortality as cumulative deaths divided by cumulative cases.
+
 
 ```{r pop_older mortality older_share}
 # Create a new variable for population over 65
 # Create a new variable for mortality rate
 # Now check for the variables that we are researching cumulative cases, cumulative deaths, population density, migration share
+
+new_covid_america_without_outlier <- transform(new_covid_america_without_outlier, 
+                               pop_older = older_m + older_f
+                               )
+
+new_covid_america_without_outlier <- transform(new_covid_america_without_outlier,
+                              older_share = (pop_older / population_2019)*100
+                              )
+
+new_covid_america_without_outlier <- transform(new_covid_america_without_outlier, 
+                              mortality = (deaths_cum / cases_cum)*100
+                              )
+
+
 
 new_covid_america <- transform(new_covid_america, 
                                pop_older = older_m + older_f
@@ -78,52 +158,258 @@ new_covid_america <- transform(new_covid_america,
 
 ```
 
+Now we can finally plot Covid-19 mortality against the share of population that is 65 or older. While the uncertainty is quite high, there seems to be a negative relationship between the two variables. This is quite surprising as our initial hypothesis stated that countries that have a larger proportion of citizens aged 65 or higher would see higher Covid-19 mortality rates. The data suggests that as the share of population aged 65 or older increases, Covid-19 mortality falls. This might be due to the small dataset or due to powerful confounding variables.
+
 
 ```{r new_covid_america, second plot}
-  new_covid_america %>%
+  new_covid_america_without_outlier %>%
   ggplot(
-    mapping = aes(x=pop_older,
+    mapping = aes(x=older_share,
                   y = mortality)) +
-  geom_point()
-    
+  theme_bw()+
+  
+  labs(y="Mortality", x="Share of population aged 65+")+
+  ggtitle("Proportion of population aged 65+ vs Mortality")+
+  
+  geom_point()+
+  stat_smooth(method="lm")
+
+
 ```
+
+To further explore the dataset, I went back to the beginning to see further variables available for each country. The next step was to filter the new dataset based on the region. This is where I ran into a disadvantage of the dataset. It classifies the countries based on only two regions: 
+
+- North America (the US and Canada)
+
+- Latin America & Caribbean
+
+- Europe and Central Asia (Greenland)
+
+- N/A
+
+
+There are two details that seemed quite shocking. Greenland is classified as “Europe & Central Asia” as a region, but “America” as a continent. After careful consideration, I decided to leave the data point in my dataset since it would have little effect due to its small population. Second, I was surprised that the entire continent of South America fell under Latin America & Caribbean. After omitting the United States as an outlier because of its extreme number of cumulative cases, I ended up with only two countries in the North America category (Canada and Bermuda (again, quite surprising)), one country in the Europe & Central Asia category and the rest of the countries fell under the Latin America & Caribbean category. Thus, further analysis based on region is inconclusive.
+
 
 ```{r pop_older mortality point plot}
 
 # Filter the different regions: Latin America & Caribbean, North America
-  new_covid_america %>%
+  new_covid_america_without_outlier %>%
   ggplot(
-    mapping = aes(x=pop_older,
+    mapping = aes(x=older_share,
                   y = mortality,
                   color = region,
                   fill = region)) +
-  geom_point()  
+ theme_bw()+
+  
+  labs(y="Mortality", x="Share of population aged 65+")+
+  ggtitle("Proportion of population aged 65+ vs Mortality; categorized by region")+
+  
+  geom_point()+
+  stat_smooth(method="lm")
+
+europe <- new_covid_america_without_outlier %>% filter (region == "Europe & Central Asia")
+europe
+
+
+north_america <- new_covid_america %>% filter (region == "North America")
+north_america
+
 
 ```
+
+
+It makes sense to further inspect mortality rates, when dividing the dataset in three tiers:
+
+- Tier 1: older_share < 10
+
+- Tier 2: 10 <= older_share >= 15
+
+- Tier 3: older_share > 15
+
+
+We see that most countries in the Americas fit within the first tier, which again proves that most of the countries in the Americas have young populations. Tier 2 and tier 3 has too few data points to draw a conclusion and tier 1 seems to counterintuitively state that countries with older populations have lower mortality rates. This could have multiple explanations, but most likely is affected by confounding variables such as income levels. 
+
+
+```{r older_share categorized in tiers}
+
+first_new_covid_america_without_outlier <- new_covid_america_without_outlier %>% filter (older_share < 10)
+second_new_covid_america_without_outlier <- new_covid_america_without_outlier %>% filter (older_share >= 10 & older_share <= 15)
+third_new_covid_america_without_outlier <- new_covid_america_without_outlier %>% filter (older_share > 15)
+
+first_new_covid_america_without_outlier %>%
+  ggplot(
+    mapping = aes(x=older_share,
+                  y = mortality,
+                  color = region,
+                  fill = region)) +
+ theme_bw()+
+  
+  labs(y="Mortality", x="Share of population aged 65+")+
+  ggtitle("Tier 1: Proportion of population aged 65+ vs Mortality; categorized by region")+
+  
+  geom_point()+
+  stat_smooth(method="lm")
+
+
+second_new_covid_america_without_outlier %>%
+  ggplot(
+    mapping = aes(x=older_share,
+                  y = mortality,
+                  color = region,
+                  fill = region)) +
+ theme_bw()+
+  
+  labs(y="Mortality", x="Share of population aged 65+")+
+  ggtitle("Tier 2: Proportion of population aged 65+ vs Mortality; categorized by region")+
+  
+  geom_point()+
+  stat_smooth(method="lm")
+
+third_new_covid_america_without_outlier %>%
+  ggplot(
+    mapping = aes(x=older_share,
+                  y = mortality,
+                  color = region,
+                  fill = region)) +
+ theme_bw()+
+  
+  labs(y="Mortality", x="Share of population aged 65+")+
+  ggtitle("Tier 3: Proportion of population aged 65+ vs Mortality; categorized by region")+
+  
+  geom_point()+
+  stat_smooth(method="lm")
+
+
+```
+
+A problem with the point plots is that many countries have similar values, thus the points lie on top of each other, masking the magnitude of the information in the data available. This is where density plots make a great choice. Therefore, the same relationships are now revisited through density plots in hope to discover deeper insights. Now the overall distribution of values across the continents can be seen. Since North America has only two values, it is not visible on the graph, however, this shortcoming has already been discussed. Therefore, the bulk of the analysis is about Central and South America. The graph clearly depicts that Latin American & Caribbean countries are relatively ‘young’ countries with only a small share of population aged 65+. The vast majority of countries are in the 5-10% range. In fact, only Puerto Rico has more than 20% of its population aged 65+. This prompts the question whether in the context of Latin America & Caribbean, there are other variables that play a stronger role in the mortality of Covid-19 than the age of the population.
+
+When inspecting the mortality density graph, it is surprising to see that countries classified as North America, which are often considered to be wealthier, with better health care systems, have much higher mortality rates. Again, one must be careful to look for simple explanations as the dataset consists of only two countries. In the case of North America, a study inspecting Covid-19 mortality rates state by state would prove to be more conclusive. 
+
+Inspecting Latin America & Caribbean shows that the vast majority of countries have mortality rates below 3.5%. However, Bolivia and Ecuador are extreme outliers that have mortality rates higher than 6%. 
+
+However, superimposing the mortality plot on top of the plot representing the share of population aged 65+ proves inconclusive. There seems to be little to no relationship between the share of the population aged 65+ and its respective Covid-19 mortality rates. This was also observed in the previous point plot, where the share of the population aged 65+ was plotted against mortality rates and the plot resulted in an almost horizontal plot with the slope of around 0.
 
 ```{r older_share mortality migration_share density plot}
 
 # geom point is not the best representation since a many points cover each other
-
-  new_covid_america %>%
-  ggplot(
+ new_covid_america_without_outlier %>%
+ ggplot(
     mapping = aes(x=older_share,
                   color = region,
                   fill = region)) +
-  geom_density(alpha = 0.4)  
 
-  new_covid_america %>%
+ theme_bw()+
+  
+  labs(y="Frequency", x="Share of population aged 65+")+
+  ggtitle("Density plot of countries by the share of their populations aged 65+")+
+  
+  geom_density(alpha=0.4)
+
+
+
+
+  new_covid_america_without_outlier %>%
   ggplot(
     mapping = aes(x=mortality,
                   color = region,
                   fill = region)) +
-  geom_density(alpha = 0.4)  
+ theme_bw()+
   
-  new_covid_america %>%
+  labs(y="Frequency", x="Mortality")+
+  ggtitle("Density plot of countries by their mortality rates of Covid-19")+
+  
+  geom_density(alpha=0.4)
+  
+  
+  
+  
+older <- new_covid_america_without_outlier %>% filter (older_share > 20)
+older
+
+north_america
+
+deadly <-new_covid_america_without_outlier %>% filter (mortality > 6)
+deadly
+
+```
+
+Although this is not the main focus of the research paper, we wanted to explore a possible confounding variable, since we could not find a strong relationship between our chosen variables. Reports of Covid-19 case explosions in migrant communities beg the question whether there is a correlation between mortality rates and the migrant population as a share of the total population. When it comes to the Americas, the most affected are Venezuelan migrants. "As of 30 October 2020, more than 136,000 Venezuelan migrants and refugees had returned to Venezuela from other countries in the region (IOM and UN OCHA, 2020). At its peak, 600 Venezuelans returned from Colombia daily and an average of 88 Venezuelans returned from Brazil daily via the border at Pacaraima (Coordination Platform for Refugees and Migrants from Venezuela, 2020)." (Migration Data Portal)
+
+
+The hypothesis would suggest that countries with  a higher share of their population consisting of migrants would have respectively higher Covid-19 mortality rates. Superimposing the two density plots onto each other, we see a strong correlation in North America and a weaker (but not non-existing) correlation in Latin America & Caribbean. This could be explored in further research papers.
+
+```{r older_share migration_share}
+  new_covid_america_without_outlier %>%
   ggplot(
     mapping = aes(x=migration_share,
                   color = region,
                   fill = region)) +
-  geom_density(alpha = 0.4)  
+  theme_bw()+
+  
+  labs(y="Frequency", x="Migrant share of the population")+
+  ggtitle("Density plot of countries by the share of migrants")+
+  
+  geom_density(alpha=0.4)
+
+
+```
+
+
+```{r load statistics packages}
+#install.packages(c("coda","mvtnorm","devtools","loo","dagitty","remotes"))
+#remotes::install_github("rmcelreath/rethinking")
+```
+
+To further discuss the shortcomings of the dataset and analysis itself, it is useful to look at the statistical values of the dataset at hand. These tools show us once again that most countries in the Americas have a relatively low number of cumulative cases. However, the large difference between the mean and median values mirrors that the dataset has a few extreme outliers.
+
+
+  
+``` {r cumulative cases statistics}
+
+mean(new_covid_america$cases_cum, na.rm = TRUE)
+median(new_covid_america$cases_cum, na.rm = TRUE)
+sd(new_covid_america$cases_cum, na.rm = TRUE)
+CumulativeCases <- new_covid_america$cases_cum
+  hist(CumulativeCases)
+
+  plot(CumulativeCases, type = 'b', main = "Cumulative cases of Covid-19 in the Americas")
+  
+summary(new_covid_america$cases_cum)
+
+```
+
+However, when looking at mortality, the outliers are not as obvious as with cumulative cases. Some interesting further research exploring this relationship could also be done. The difference between the median and the mean is a lot smaller. The histogram shows that there is a more balanced distribution between 2% mortality and 4% mortality.
+
+``` {r mortality statistics}
+
+mean(new_covid_america$mortality)
+median(new_covid_america$mortality)
+sd(new_covid_america$mortality)
+
+Mortality <- new_covid_america$mortality
+  hist(Mortality)
+
+  plot(Mortality, type = 'b', main = "Covid-19 mortality in the Americas")
+  
+summary(new_covid_america$mortality)
+
+```
+
+When looking at the share of migrants, we again see a large difference between the mean and the median values, suggesting there are a few extreme outliers. The histogram shows us that most countries in the Americas have migrants as a share of the population of 10% or less.
+
+``` {r migration statistics}
+
+mean(new_covid_america$migration_share, na.rm = TRUE)
+median(new_covid_america$migration_share, na.rm = TRUE)
+sd(new_covid_america$migration_share, na.rm = TRUE)
+
+MigrationShare <- new_covid_america$migration_share
+  hist(MigrationShare)
+
+  plot(MigrationShare, type = 'b', main = "Migrant share of the population in the Americas")
+  
+summary(new_covid_america$migration_share)
 
 ```
