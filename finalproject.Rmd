@@ -1416,16 +1416,17 @@ Even though the results we got were not what we expected, we are far from discou
 
 **References**
 
-Source: https://ec.europa.eu/eurostat/cache/infographs/elderly/index.html#:~:text=In%202016%2C%2019.2%25%20of%20the,lowest%20in%20Ireland%20(13.2%25).
+Source: Ec.europa.eu. 2020. A Look At The Lives Of The Elderly In The EU Today. <https://ec.europa.eu/eurostat/cache/infographs/elderly/index.html#:~:text=In%202016%2C%2019.2%25%20of%20the,lowest%20in%20Ireland%20(13.2%25).
 
 Source: https://ec.europa.eu/eurostat/statistics-explained/index.php/Migration_and_migrant_population_statistics#:~:text=2.4%20million%20immigrants%20entered%20the,non%2DEU%2D27%20citizens.
 
-Source: https://en.wikipedia.org/wiki/Intra-African_migration#:~:text=Africa%20hosts%20the%204th%20largest,people%20moved%20between%20African%20countries.
+Source: En.wikipedia.org. 2020. Intra-African Migration. <https://en.wikipedia.org/wiki/Intra-African_migration> 
 
-Source: https://www.nejm.org/doi/full/10.1056/NEJMp2006761
+Source: (Covid-19 and Immunity in Aging Populations — A New Research Agenda | NEJM, 2020)
+https://www.nejm.org/doi/full/10.1056/NEJMp2006761
 
-Source: https://www.cdc.gov/coronavirus/2019-ncov/need-extra-precautions/older-adults.html
+Source: Centers for Disease Control and Prevention. 2020. COVID-19 And Your Health. <https://www.cdc.gov/coronavirus/2019-ncov/need-extra-precautions/older-adults.html>
 
-Source: https://www.who.int/news-room/feature-stories/detail/who-delivers-advice-and-support-for-older-people-during-covid-19#:~:text=Although%20all%20age%20groups%20are,potential%20underlying%20health%20conditions.
+Source: Who.int. 2020. WHO Delivers Advice And Support For Older People During COVID-19. <https://www.who.int/news-room/feature-stories/detail/who-delivers-advice-and-support-for-older-people-during-covid-19#:~:text=Although%20all%20age%20groups%20are,potential%20underlying%20health%20conditions.>
 
 -------------------------------------------------------------
