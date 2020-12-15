@@ -45,7 +45,7 @@ I chose to analyze the first part: North America, Central America and South Amer
   filter(continent == "America")
   nrow(covid_america)
   
-covid_america
+# covid_america
 ```
 
 The new data set has 48 countries saved into rows and the same 132 variables saved into columns. For initial glimpse of the data at hand, I plotted a simple point graph, which visualizes the relationship between cumulative cases and cumulative deaths in the Americas to see if there seems to be a pattern. 
@@ -75,7 +75,7 @@ Immediately after plotting this, it is obvious there are two extreme outliers. T
 new_covid_america <- covid_america %>% filter (cases_cum < 2500000) 
 outliers <- covid_america %>% filter (cases_cum > 2500000)
 
-outliers
+# outliers
 ```
 
 Now it is possible to delve into a more detailed analysis of the remaining 46 countries spanning the Americas. However, the process was not as smooth as one might think. When brainstorming, which variables might be of interest for the team’s analysis, we decided to analyze lockdown measures as this is something that acutely affects all of us and frequents media headlines. After settling on the lockdown variables, I started running through the data for the Americas. I quickly realized that nearly all values for the lockdown variables were missing and marked N/A. The data set had been created too early on in the pandemic to incorporate data reflecting lockdown measures and their effectiveness. 
@@ -110,7 +110,7 @@ new_covid_america %>%
   stat_smooth(method="lm")
 
 outlier_deaths <- new_covid_america %>% filter (deaths_cum > 75000)
-outlier_deaths
+# outlier_deaths
 
 
 
@@ -228,11 +228,11 @@ There are two details that seemed quite shocking. Greenland is classified as “
   stat_smooth(method="lm")
 
 europe <- new_covid_america_without_outlier %>% filter (region == "Europe & Central Asia")
-europe
+# europe
 
 
 north_america <- new_covid_america %>% filter (region == "North America")
-north_america
+# north_america
 
 
 ```
@@ -346,12 +346,12 @@ However, superimposing the mortality plot on top of the plot representing the sh
   
   
 older <- new_covid_america_without_outlier %>% filter (older_share > 20)
-older
+# older
 
-north_america
+#north_america 
 
 deadly <-new_covid_america_without_outlier %>% filter (mortality > 6)
-deadly
+# deadly
 
   new_covid_america_without_outlier %>%
   ggplot(
