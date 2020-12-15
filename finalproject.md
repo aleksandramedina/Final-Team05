@@ -2958,10 +2958,11 @@ seeing what is right in front of our eyes.
 
 Source: Ec.europa.eu. 2020. A Look At The Lives Of The Elderly In The EU
 Today.
-\<<https://ec.europa.eu/eurostat/cache/infographs/elderly/index.html#>:\~:text=In%202016%2C%2019.2%25%20of%20the,lowest%20in%20Ireland%20(13.2%25).
+<https://ec.europa.eu/eurostat/cache/infographs/elderly/index.html#:~:text=In%202016%2C%2019.2%25%20of%20the,lowest%20in%20Ireland%20(13.2%25).>
 
-Source:
-<https://ec.europa.eu/eurostat/statistics-explained/index.php/Migration_and_migrant_population_statistics#>:\~:text=2.4%20million%20immigrants%20entered%20the,non%2DEU%2D27%20citizens.
+Source: (Migration and migrant population statistics - Statistics
+Explained, 2020)
+<https://ec.europa.eu/eurostat/statistics-explained/index.php/Migration_and_migrant_population_statistics#:~:text=2.4%20million%20immigrants%20entered%20the,non%2DEU%2D27%20citizens.>
 
 Source: En.wikipedia.org. 2020. Intra-African Migration.
 <https://en.wikipedia.org/wiki/Intra-African_migration>
