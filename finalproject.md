@@ -13,6 +13,7 @@ library(magrittr)
 library(dplyr) 
 install.packages("tufte")
 library(ggplot2)
+library(gridExtra)
 ```
 
 The research done and data provided by WZB, Institutions and Political
@@ -1213,3 +1214,625 @@ summary(new_covid_america$migration_share)
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
     ##   0.117   1.669   4.805  12.896  15.137  70.448       3
+
+-----
+
+``` r
+covid <- read_csv("data.csv")
+```
+
+    ## Warning: Missing column names filled in: 'X1' [1]
+
+``` r
+covid_2 <- read_csv("data2.csv")
+```
+
+I’ll be analyzing the third part: Asia, Oceania and Australia. First,
+I’ll be filtering the data set to include only the countries that are
+present in this specific region, which will be stored in a new variable
+called ‘covid\_asia’. I noticed that Australia was already included in
+Oceania region in the dataset. Therefore, I filtered only for Asia and
+Oceania. By using the ‘nrow’ function, I got to know the total number of
+rows i.e. countries in this region, which is equal to 52 countries.
+
+``` r
+# Filter for countries in Asia-Pacific
+
+covid_asia <- covid %>%
+  filter(continent == "Asia" | continent == "Oceania")
+nrow(covid_asia)
+```
+
+    ## [1] 52
+
+**General situation or background of this region**
+
+Asia-Pacific is the hardest hit by COVID-19 among all the other
+continents. About 80 percent of the global total of people affected by
+disasters and COVID-19 in 2020 were in the Asia-Pacific.
+
+“Asia surpassed 10 million infections of the coronavirus previous month,
+as cases continue to mount. Behind only Latin America, Asia accounts for
+about one-fourth of the global caseload of 42.1 million of the virus.
+With over 163,000 deaths, the region accounts for some 14% of the global
+COVID-19 toll” (Source: News18 India, Asia becomes second region to
+exceed 10 million coronavirus cases, 24 Oct 2020, Reuters).
+
+The Coronavirus pandemic has challenged healthcare systems across the
+world in a way not seen in modern times. Older people are
+disproportionately affected by the COVID-19 pandemic, which has had a
+profound impact on research as well as clinical service delivery. They
+are bearing the consequences of the pandemic as a group at the highest
+risk of hospitalization and death from COVID-19 illness. In this
+research paper, we’ll take a closer look at how exactly the old
+population and population densities of specific countries in
+Asia-Pacific region affect their mortality rate and are they even
+associated or not.
+
+As proved by studies, the risk for severe illness with COVID-19
+increases with age, with older adults at highest risk. Although all age
+groups are at risk of contracting COVID-19, older people face
+significant risk of developing severe illness if they contract the
+disease due to physiological changes that come with ageing and potential
+underlying health conditions.
+
+For example, people in their 50s are at higher risk for severe illness
+than people in their 40s. Similarly, people in their 60s or 70s are, in
+general, at higher risk for severe illness than people in their 50s. The
+greatest risk for severe illness from COVID-19 is among those aged 85 or
+older.
+
+The table below represents the age intervals which have higher risk of
+getting infected (hospitalization) and death.
+
+![](old.jpg) (Source: Centers for Disease Control and Prevention CDC
+24/7)
+
+In our research, we’ll be considering only the population aged 65 and
+above i.e. old adults including male as well as female.
+
+-----
+
+COVID-19 mortality is the number of deaths out of the total number of
+infected cases. Studies have shown that COVID-19 mortality can be
+explained by age, obesity, and underlying diseases, such as
+hypertension, diabetes, and coronary heart disease, as well as clinical
+symptoms, complications, hospital care, previous immunity and virus
+mutations.
+
+Countries vary widely in terms of capacities to prevent, detect and
+respond to disease outbreaks. In this paper, I aim to explore these
+factors associated with COVID-19 mortalities at the country level,
+specifically in Asia-Pacific region.
+
+-----
+
+**VARIABLES that I’ll be using from the data set:**
+
+  - **cases\_cum** - Variable for cumulative cases. For instance, the
+    number of people who have ever tested positive for coronavirus in a
+    given country, regardless of whether they have recovered.
+
+  - **deaths\_cum** - Variable for cumulative deaths. It is the total
+    number of people who have died due to coronavirus in a given
+    country.
+
+  - **mortality** - Variable that holds the total number of deaths out
+    of total COVID-19 positive infected cases.
+
+  - **old\_perc** - Variable that refers to the percentage of old aged
+    population among the total population of the country.
+
+  - **pop\_older** - It is the total old aged population in a country,
+    including male and female.
+
+-----
+
+To begin with the analysis, we’ll first plot a basic scatter plot
+**(cumulative cases vs cumulative deaths)** showing the initial glimpse
+or pattern in this region or continent. I’m making use of the two
+variables here i.e. cases\_cum (X-axis) and deaths\_cum (Y-axis).
+
+``` r
+# Map initial glimpse of the data: cumulative cases & cumulative deaths
+
+covid_asia %>%
+  ggplot(mapping = aes(x = cases_cum, 
+                       y = deaths_cum)) + 
+  theme_bw() +
+  labs(y="Cumulative Deaths", x = "Cumulative Cases") +
+  ggtitle("Cumulative Cases vs Cumulative Deaths") +
+  geom_point()
+```
+
+![](finalproject_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+
+Since there is one outlier, so removing it will enable a more closer and
+accurate analysis. Hence, I’ll be filtering the data set again and
+storing in a new variable called ‘new\_covid\_asia’ to include only the
+countries that have a total number of cases less than 2,500,000.
+
+``` r
+new_covid_asia <- covid_asia %>% filter(cases_cum < 2500000)
+
+outlier <- covid_asia %>% filter (cases_cum > 2500000)
+outlier
+```
+
+    ## # A tibble: 1 x 132
+    ##      X1 geoid2 date       month   day  year elapsed date_rep   cases deaths
+    ##   <dbl> <chr>  <date>     <dbl> <dbl> <dbl>   <dbl> <date>     <dbl>  <dbl>
+    ## 1    90 IND    2020-11-22    11    21  2020     326 2020-11-22 45209    501
+    ## # … with 122 more variables: country <chr>, population_2019 <dbl>,
+    ## #   continent <chr>,
+    ## #   Cumulative_number_for_14_days_of_COVID.19_cases_per_100000 <dbl>,
+    ## #   cases_cum <dbl>, deaths_cum <dbl>, deaths_cum_log <dbl>,
+    ## #   deaths_cum_l7 <dbl>, deaths_cum_g7 <dbl>, region <chr>, gov_effect <dbl>,
+    ## #   trade <dbl>, ineq <dbl>, gdp_pc <dbl>, pop_tot <dbl>, older_m <dbl>,
+    ## #   older_f <dbl>, air_travel <dbl>, fdi <dbl>, pop_density <dbl>, urban <dbl>,
+    ## #   migration_share <dbl>, oil <dbl>, soc_insur_cov <dbl>, soc_contrib <dbl>,
+    ## #   soc_safety <dbl>, pop_below14_2018 <dbl>, polity <dbl>, gini <dbl>,
+    ## #   elf_epr <dbl>, rq_polarization <dbl>, count_powerless <dbl>,
+    ## #   share_powerless <dbl>, media_critical <dbl>, journal_harass <dbl>,
+    ## #   health_equality <dbl>, property_rights <dbl>, transparent_law <dbl>,
+    ## #   bureaucracy_corrupt <dbl>, polar_rile <dbl>, trust_people <dbl>,
+    ## #   trust_gov <dbl>, electoral_pop <dbl>, federal_ind <dbl>, checks_veto <dbl>,
+    ## #   polariz_veto <dbl>, dist_senate <dbl>, dist_presid <dbl>, dist_parlm <dbl>,
+    ## #   dist_anyelec <dbl>, elect_pressure <dbl>, pos_gov_lr <dbl>,
+    ## #   woman_leader <dbl>, infections_mers <dbl>, infections_sars <dbl>,
+    ## #   infections_ebola <dbl>, infection <dbl>, med_age_2013 <dbl>,
+    ## #   vdem_libdem <dbl>, al_etfra <dbl>, al_religfra <dbl>, fe_etfra <dbl>,
+    ## #   vdem_mecorrpt <dbl>, share_health_ins <dbl>, pandemic_prep <dbl>,
+    ## #   pop_den_2018 <dbl>, life_exp_2017 <dbl>, resp_disease_prev <dbl>,
+    ## #   detect_index <dbl>, doctors_pc <dbl>, hosp_beds_pc <dbl>,
+    ## #   literacy_rate <dbl>, healthcare_qual <dbl>, acc_sanitation <dbl>,
+    ## #   health_exp_pc <dbl>, hdi <dbl>, health_index <dbl>, respond_index <dbl>,
+    ## #   state_fragility <dbl>, pr <dbl>, share_older <dbl>, pop_tot_log <dbl>,
+    ## #   pop_density_log <dbl>, distancing_bin <lgl>, lockdown_bin <lgl>,
+    ## #   lockdown_n <lgl>, distancing_n <lgl>, days_rel_lockdown <lgl>,
+    ## #   days_rel_distancing <lgl>, retail <lgl>, grocery <lgl>, parks <lgl>,
+    ## #   transit <lgl>, work <lgl>, residential <lgl>, mobility_index <dbl>,
+    ## #   stringency <lgl>, C1_School.closing <lgl>, C2_Workplace.closing <lgl>,
+    ## #   C3_Cancel.public.events <lgl>, …
+
+As expected, the outlier is India, the second most populated and second
+most COVID-19 affected country in the world with over 9.7 million
+coronavirus cases as of December 10, 2020.
+
+Now, we can plot the **cumulative cases vs cumulative deaths** again
+with the new data set (where the two outliers were removed) and
+interpret the plot better.
+
+``` r
+new_covid_asia %>%
+  ggplot(mapping = aes(x = cases_cum,
+                       y = deaths_cum)) + 
+  theme_bw() +
+  labs(y="Cumulative Deaths", x = "Cumulative Cases") +
+  ggtitle("Cumulative Cases vs Cumulative Deaths (better representation)") +
+  geom_point() + geom_smooth()
+```
+
+    ## `geom_smooth()` using method = 'loess' and formula 'y ~ x'
+
+![](finalproject_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+This scatter plot has an **exponential curve**. Hence, it has a
+**positive correlation** between the two variables i.e. cases\_cum and
+deaths\_cum. This means that as the number of positive COVID-19 cases
+rise, the death cases also rise, and the increase is exponential
+i.e. with small increase in cases, there is large increase in death
+count.
+
+-----
+
+Similarly, I’ll be analyzing the relationship between COVID-19 mortality
+(in percentage) and cumulative cases.
+
+``` r
+covid_2 %>% filter(cases_cum < 600000) %>%
+  ggplot(mapping = aes(x = cases_cum,
+                       y = (deaths_cum/cases_cum)*100)) + 
+  geom_point() + 
+  geom_smooth(method = lm, se=F) + 
+  theme_bw() + 
+  labs(y="COVID-19 Mortality %", x = "Cumulative Cases")
+```
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+![](finalproject_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+All the countries have mortality rates below 10% except one country
+i.e. Yemen having a 29% mortality rate.
+
+``` r
+outlier <- covid_2 %>% filter((deaths_cum/cases_cum)*100 > 20)
+outlier
+```
+
+    ## # A tibble: 1 x 8
+    ##   country pop_density cases_cum deaths_cum old_perc continent region      income
+    ##   <chr>         <dbl>     <dbl>      <dbl>    <dbl> <chr>     <chr>       <chr> 
+    ## 1 Yemen            56      2093        608     2.90 Asia      Middle Eas… Low i…
+
+Now, after removing Yemen from the plot:
+
+``` r
+covid_2 %>% filter(cases_cum < 600000 & (deaths_cum/cases_cum)*100 < 20) %>%
+  ggplot(mapping = aes(x = cases_cum,
+                       y = (deaths_cum/cases_cum)*100)) + 
+  geom_point() + 
+  geom_smooth(method = lm, se=F) + 
+  theme_bw() + 
+  labs(y="COVID-19 Mortality %", x = "Cumulative Cases")
+```
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+![](finalproject_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+
+``` r
+lm(formula = (deaths_cum/cases_cum)*100 ~ cases_cum, data = covid_2)
+```
+
+    ## 
+    ## Call:
+    ## lm(formula = (deaths_cum/cases_cum) * 100 ~ cases_cum, data = covid_2)
+    ## 
+    ## Coefficients:
+    ## (Intercept)    cases_cum  
+    ##   2.179e+00   -7.657e-08
+
+The scatter plot indicates that there is a slightly positive correlation
+between COVID-19 mortality and cumulative cases overall (including all
+countries without the outliers i.e. India and Yemen). To verify, the
+slope intercept shows a positive value +2.179.
+
+A more closer analysis of different countries is done based on
+percentage of old population.
+
+Now, we’ll divide the proportions of old aged population into
+
+  - **low % old population:** Countries that have less than 4.718% of
+    old population among the total population of that country.
+  - **moderate % old population:** Countries that have between 4.718% to
+    5.652% of old population among the total population of that country.
+  - **high % old population:** Countries that have more than 7.652% of
+    old population among the total population of that country.
+
+In order to see what kind of relationships exist between the two
+variables in these categorized countries, we’ll be:
+
+**Filtering countries that have old aged population % below 4.718 (LOW
+%).**
+
+  - **Central Asia**
+      - Tajikistan
+      - Uzbekistan
+  - **Middle East and North Africa**
+      - United Arab Emirates
+      - Qatar
+      - Oman
+      - Bahrain
+      - Kuwait
+      - Yemen
+      - Palestinian Territories
+      - Iraq
+      - Saudi Arabia
+      - Jordan
+  - **South Asia**
+      - Afghanistan
+      - Pakistan
+  - **East Asia and Pacific**
+      - Vanuatu
+      - Papua New Guinea
+      - Solomon Islands
+      - Timor-Leste
+      - Laos
+      - Mongolia
+
+<!-- end list -->
+
+``` r
+sp1 <- covid_2 %>% 
+  filter(old_perc < 4.718) %>%
+  ggplot(mapping = aes(x = cases_cum,
+                       y = (deaths_cum/cases_cum)*100)) + 
+  geom_point() + 
+  geom_smooth(method = lm, se=F) + 
+  theme_bw(base_size = 10) + 
+  labs(y="COVID-19 Mortality %", x = "Cumulative Cases") +
+  ggtitle("Countries with low % old population")
+```
+
+**Filtering countries that have old aged population % between 4.718 and
+7.652 (MODERATE %).**
+
+  - **Central Asia**
+      - Kyrgyzstan
+      - Kazakhstan
+      - Vietnam
+  - **Middle East and North Africa**
+      - Syria
+      - Bhutan
+      - Lebanon
+  - **South Asia**
+      - Bangladesh
+      - Nepal
+      - India
+      - Iran
+  - **East Asia and Pacific**
+      - Cambodia
+      - Brunei
+      - Philippines
+      - Fiji
+      - Myanmar (Burma)
+      - Indonesia
+      - Malaysia
+
+<!-- end list -->
+
+``` r
+sp2 <- covid_2 %>% 
+  filter(old_perc >= 4.718 & old_perc <= 7.652) %>%
+  ggplot(mapping = aes(x = cases_cum,
+                       y = (deaths_cum/cases_cum)*100)) + 
+  geom_point() + 
+  geom_smooth(method = lm, se=F) + 
+  theme_bw(base_size = 10) + 
+  labs(y="COVID-19 Mortality %", x = "Cumulative Cases") +
+  ggtitle("Countries with moderate % old population")
+```
+
+**Filtering countries that have old aged population % greater than 8
+(HIGH %).**
+
+  - **Middle East and North Africa**
+      - Israel
+  - **South Asia**
+      - Sri Lanka
+  - **East Asia and Pacific**
+      - China
+      - Singapore
+      - Thailand
+      - South Korea
+      - Australia
+      - New Zealand
+      - Japan
+      - New Caledonia
+
+<!-- end list -->
+
+``` r
+sp3 <- covid_2 %>% 
+  filter(old_perc > 8) %>%
+  ggplot(mapping = aes(x = cases_cum,
+                       y = (deaths_cum/cases_cum)*100)) + 
+  geom_point() + 
+  geom_smooth(method = lm, se=F) + 
+  theme_bw(base_size = 10) + 
+  labs(y="COVID-19 Mortality %", x = "Cumulative Cases") +
+  ggtitle("Countries with high % old population")
+```
+
+``` r
+grid.arrange(sp1, sp2, sp3, ncol = 2)
+```
+
+    ## `geom_smooth()` using formula 'y ~ x'
+    ## `geom_smooth()` using formula 'y ~ x'
+    ## `geom_smooth()` using formula 'y ~ x'
+
+![](finalproject_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+
+According to the plots, the **negative correlation** was significant for
+countries with moderate and low percentage of old population,
+respectively. I had tried to use logarithmic scale in these plots
+earlier but plots without using log seemed more clearer in pattern. The
+overall negative correlation in all three plots might be due to the fact
+that countries, with time adopted several preventive measures, including
+better healthcare facilities, professionals to lessen the impact of the
+virus on its people.
+
+The survival rates seems to have improved, but rising case numbers are
+causing the total number of deaths to increase. The average age of
+people who developed COVID-19 and those visiting emergency rooms due to
+the disease dropped as more young people came down with the illness.
+Thus, there was an increase in younger people hospitalized with
+COVID-19.
+
+Moreover, Many people at risk are also taking more steps to reduce the
+chances of being exposed to the virus. People who are older and have
+more underlying medical conditions are more consistently doing social
+distancing, frequent handwashing, and other measures to protect
+themselves.
+
+As we compare the above three plots, we see that the countries that had
+comparatively lower population of old aged, showed a steeper negative
+slope (or comparatively more negative correlation than other two). It
+indicates that due to old population already being low, there was more
+decrease in mortality rate with rising cases.
+
+While the countries that have moderate percentage of old population,
+showed not much decrease in mortality rate or less steeper negative
+slope than the previous. This might be because there is more old
+population proportion in these countries comparatively.
+
+Based on surveying the countries in Asia-Pacific, the countries that
+have high percentage of old people, are advanced in terms of technology,
+government and have better healthcare system. Hence, we see a very
+little or no correlation in high % old population scatter plot.
+
+-----
+
+**Descriptive Analysis**
+
+``` r
+covid_2 %>% 
+  summary(covid_2)
+```
+
+    ##    country           pop_density       cases_cum         deaths_cum      
+    ##  Length:47          Min.   :   2.0   Min.   :      1   Min.   :     0.0  
+    ##  Class :character   1st Qu.:  32.5   1st Qu.:   1489   1st Qu.:    26.5  
+    ##  Mode  :character   Median :  93.0   Median :  69581   Median :   603.0  
+    ##                     Mean   : 398.0   Mean   : 319030   Mean   :  5567.3  
+    ##                     3rd Qu.: 248.0   3rd Qu.: 163312   3rd Qu.:  2073.0  
+    ##                     Max.   :8358.0   Max.   :9095806   Max.   :133227.0  
+    ##     old_perc       continent            region             income         
+    ##  Min.   : 1.157   Length:47          Length:47          Length:47         
+    ##  1st Qu.: 3.554   Class :character   Class :character   Class :character  
+    ##  Median : 5.180   Mode  :character   Mode  :character   Mode  :character  
+    ##  Mean   : 6.593                                                           
+    ##  3rd Qu.: 7.413                                                           
+    ##  Max.   :28.002
+
+![](descanalysis.PNG)
+
+The table above summarizes the mortality rate, cumulative cases, deaths
+and % old population of different countries in Asia-Pacific region.
+
+**Descriptive statistics**
+
+For the 51 countries, **the mean COVID-19 mortality rate was 2.15%**,
+the mean COVID-19 cumulative cases was 319030 and deaths was 5567.
+Moreover, the mean percentage of old population considering all
+countries in Asia-Pacific region was 6.59%.
+
+-----
+
+I feel that the residents living in areas with high population density,
+such as big or metropolitan cities have a higher probability to come
+into close contact with others and consequently any contagious disease
+is expected to spread rapidly in dense areas. Now, I’ll analyze and
+conclude what kind of relationship exists between these.
+
+``` r
+covid_2 %>% filter(pop_density < 1000) %>%
+  ggplot(mapping = aes(x = log(pop_density),
+                       y = log((deaths_cum/cases_cum)*100))) + 
+  theme_bw(base_size = 10) +
+  labs(y="Mortality Rate % (log)", x = "Population Density in sq. kms (log)") +
+  ggtitle("Mortality vs Population Density") +
+  geom_point() + geom_smooth(method=lm, se=F)
+```
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+    ## Warning: Removed 8 rows containing non-finite values (stat_smooth).
+
+![](finalproject_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+
+Population density refers to the number of people living in an area per
+square kilometer.
+
+I’ve used logarithmic scale here so that the points appear more spread
+out to enable better analysis. Surprisingly, the mortality rate seems to
+be decreasing with increasing population density. After looking at the
+countries, I found out that countries with higher densities have
+significantly lower virus-related death rates than do counties with
+lower densities, possibly due to superior healthcare systems.
+High-density cities and countries may offer more opportunities for
+crowding. But in Asia, proper public health precautions have spared many
+countries from the worst.
+
+The plot shows that higher-density countries were actually associated
+with lower mortality rates, possibly because residents were more
+strictly following social-distancing guidelines or had better access to
+health care. Their superior health and educational systems could help
+mitigate the full impact of the disease for those who are infected,
+leading to higher rates of recovery and lower rates of mortality. Dense
+areas may be more likely to put in place policies that foster social
+distancing, thus reducing actual rates of infection or simply leading to
+greater social distancing due to greater public awareness of the threat.
+In addition, it is possible that denser environments make it easier for
+people to stay somewhat connected with neighbors, families, and friends
+while they are sheltering in place.
+
+On the other hand, the lesser-density countries, even if they have less
+number of contacts but due to not having services to support patients,
+might result in higher mortality which is verified by the plot above.
+
+-----
+
+``` r
+MigrationShare <- covid_asia$migration_share
+  hist(MigrationShare)
+```
+
+![](finalproject_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+Now I’ll be exploring our confounding variable i.e. migration\_share.
+Reports of COVID-19 case explosions in migrant communities beg the
+question whether there is a correlation between mortality rates and the
+migrant population as a share of the total population. As is the case
+with America, the histogram shows us that most countries in Asia-Pacific
+have migrants as a share of the population of 10% or less.
+
+``` r
+ggplot(data = covid_asia, mapping = aes(x = (deaths_cum/cases_cum)*100), fill = region, color = region) +
+  geom_histogram(color="black", fill="light gray") +
+  theme_bw() + labs(x = "Mortality (%)")
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+![](finalproject_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+This histogram shows that most of the countries have less than 10%
+mortality rate, with Yemen being an outlier having 29% mortality %.
+
+``` r
+outlier_mortality <- covid_asia %>%
+  filter((deaths_cum/cases_cum)*100 > 20)
+outlier_mortality
+```
+
+    ## # A tibble: 1 x 132
+    ##      X1 geoid2 date       month   day  year elapsed date_rep   cases deaths
+    ##   <dbl> <chr>  <date>     <dbl> <dbl> <dbl>   <dbl> <date>     <dbl>  <dbl>
+    ## 1   206 YEM    2020-11-22    11    21  2020     326 2020-11-22     3      1
+    ## # … with 122 more variables: country <chr>, population_2019 <dbl>,
+    ## #   continent <chr>,
+    ## #   Cumulative_number_for_14_days_of_COVID.19_cases_per_100000 <dbl>,
+    ## #   cases_cum <dbl>, deaths_cum <dbl>, deaths_cum_log <dbl>,
+    ## #   deaths_cum_l7 <dbl>, deaths_cum_g7 <dbl>, region <chr>, gov_effect <dbl>,
+    ## #   trade <dbl>, ineq <dbl>, gdp_pc <dbl>, pop_tot <dbl>, older_m <dbl>,
+    ## #   older_f <dbl>, air_travel <dbl>, fdi <dbl>, pop_density <dbl>, urban <dbl>,
+    ## #   migration_share <dbl>, oil <dbl>, soc_insur_cov <dbl>, soc_contrib <dbl>,
+    ## #   soc_safety <dbl>, pop_below14_2018 <dbl>, polity <dbl>, gini <dbl>,
+    ## #   elf_epr <dbl>, rq_polarization <dbl>, count_powerless <dbl>,
+    ## #   share_powerless <dbl>, media_critical <dbl>, journal_harass <dbl>,
+    ## #   health_equality <dbl>, property_rights <dbl>, transparent_law <dbl>,
+    ## #   bureaucracy_corrupt <dbl>, polar_rile <dbl>, trust_people <dbl>,
+    ## #   trust_gov <dbl>, electoral_pop <dbl>, federal_ind <dbl>, checks_veto <dbl>,
+    ## #   polariz_veto <dbl>, dist_senate <dbl>, dist_presid <dbl>, dist_parlm <dbl>,
+    ## #   dist_anyelec <dbl>, elect_pressure <dbl>, pos_gov_lr <dbl>,
+    ## #   woman_leader <dbl>, infections_mers <dbl>, infections_sars <dbl>,
+    ## #   infections_ebola <dbl>, infection <dbl>, med_age_2013 <dbl>,
+    ## #   vdem_libdem <dbl>, al_etfra <dbl>, al_religfra <dbl>, fe_etfra <dbl>,
+    ## #   vdem_mecorrpt <dbl>, share_health_ins <dbl>, pandemic_prep <dbl>,
+    ## #   pop_den_2018 <dbl>, life_exp_2017 <dbl>, resp_disease_prev <dbl>,
+    ## #   detect_index <dbl>, doctors_pc <dbl>, hosp_beds_pc <dbl>,
+    ## #   literacy_rate <dbl>, healthcare_qual <dbl>, acc_sanitation <dbl>,
+    ## #   health_exp_pc <dbl>, hdi <dbl>, health_index <dbl>, respond_index <dbl>,
+    ## #   state_fragility <dbl>, pr <dbl>, share_older <dbl>, pop_tot_log <dbl>,
+    ## #   pop_density_log <dbl>, distancing_bin <lgl>, lockdown_bin <lgl>,
+    ## #   lockdown_n <lgl>, distancing_n <lgl>, days_rel_lockdown <lgl>,
+    ## #   days_rel_distancing <lgl>, retail <lgl>, grocery <lgl>, parks <lgl>,
+    ## #   transit <lgl>, work <lgl>, residential <lgl>, mobility_index <dbl>,
+    ## #   stringency <lgl>, C1_School.closing <lgl>, C2_Workplace.closing <lgl>,
+    ## #   C3_Cancel.public.events <lgl>, …
+
+``` r
+covid_asia_without_outlier <- covid_asia %>%
+  filter((deaths_cum/cases_cum)*100 < 10)
+ggplot(data = covid_asia_without_outlier, mapping = aes(x = (deaths_cum/cases_cum)*100), fill = region, color = region) +
+  geom_histogram(color="black", fill="light gray") +
+  theme_bw() + labs(x = "Mortality (%)") + ggtitle("Histogram without Yemen")
+```
+
+    ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+
+![](finalproject_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
