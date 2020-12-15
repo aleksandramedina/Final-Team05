@@ -1054,11 +1054,9 @@ The reason behind it might be because COVID-19 is highly contagious and there is
 
 Drawbacks of this analysis: The dataset used for this analysis confuses the countries that belong to two or three continents at the same time. For example, Malta is placed both in Europe and in North Africa; Azerbaijan, Armenia, and Georgia are placed both in Europe and Asia. That is the reason why some results may be unexpected and a lot of deleting had to be done. This type of classification of countries into continents creates confusion when we were trying to focus specifically on Europe and on Africa as two separate continents. There needs to be an additional method of classification that would put one country as belonging to one continent. A way that that method can be utilized is: classifying the countries by area - how much of the country belongs more to one continent or another.  
 
---------------------------------------------------------------
+-------------------------------------------------------------
 
----
-author: "**ASIA-PACIFIC REGION** - "
----
+**ASIA-PACIFIC REGION**
 
 ```{r load-data, message=FALSE}
 covid <- read_csv("data.csv")
