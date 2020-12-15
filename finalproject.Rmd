@@ -453,15 +453,15 @@ To further discuss the shortcomings of the dataset and analysis itself, it is us
   
 ``` {r cumulative cases statistics}
 
-mean(new_covid_america$cases_cum, na.rm = TRUE)
-median(new_covid_america$cases_cum, na.rm = TRUE)
-sd(new_covid_america$cases_cum, na.rm = TRUE)
+mean(new_covid_america$CumulativeCases, na.rm = TRUE)
+median(new_covid_america$CumulativeCases, na.rm = TRUE)
+sd(new_covid_america$CumulativeCases, na.rm = TRUE)
 CumulativeCases <- new_covid_america$CumulativeCases
   hist(CumulativeCases)
 
   plot(CumulativeCases, type = 'b', main = "Cumulative cases of Covid-19 in the Americas")
   
-summary(new_covid_america$cases_cum)
+summary(new_covid_america$CumulativeCases)
 
 ```
 
@@ -469,16 +469,16 @@ However, when looking at mortality, the outliers are not as obvious as with cumu
 
 ``` {r mortality statistics}
 
-mean(new_covid_america$mortality)
-median(new_covid_america$mortality)
-sd(new_covid_america$mortality)
+mean(new_covid_america$Mortality)
+median(new_covid_america$Mortality)
+sd(new_covid_america$mMrtality)
 
 Mortality <- new_covid_america$Mortality
   hist(Mortality)
 
   plot(Mortality, type = 'b', main = "Covid-19 mortality in the Americas")
   
-summary(new_covid_america$mortality)
+summary(new_covid_america$Mortality)
 
 ```
 

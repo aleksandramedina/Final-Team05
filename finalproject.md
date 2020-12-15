@@ -703,22 +703,22 @@ difference between the mean and median values mirrors that the dataset
 has a few extreme outliers.
 
 ``` r
-mean(new_covid_america$cases_cum, na.rm = TRUE)
+mean(new_covid_america$CumulativeCases, na.rm = TRUE)
 ```
 
-    ## [1] 147759.5
+    ## [1] 10687.47
 
 ``` r
-median(new_covid_america$cases_cum, na.rm = TRUE)
+median(new_covid_america$CumulativeCases, na.rm = TRUE)
 ```
 
-    ## [1] 5510
+    ## [1] 6620.834
 
 ``` r
-sd(new_covid_america$cases_cum, na.rm = TRUE)
+sd(new_covid_america$CumulativeCases, na.rm = TRUE)
 ```
 
-    ## [1] 330865.1
+    ## [1] 11167.48
 
 ``` r
 CumulativeCases <- new_covid_america$CumulativeCases
@@ -734,11 +734,11 @@ CumulativeCases <- new_covid_america$CumulativeCases
 ![](finalproject_files/figure-gfm/cumulative%20cases%20statistics-2.png)<!-- -->
 
 ``` r
-summary(new_covid_america$cases_cum)
+summary(new_covid_america$CumulativeCases)
 ```
 
     ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##       3     234    5510  147760  114922 1366169
+    ##   201.7  1346.6  6620.8 10687.5 13965.6 44436.1
 
 However, when looking at mortality, the outliers are not as obvious as
 with cumulative cases. Some interesting further research exploring this
@@ -747,22 +747,22 @@ the mean is a lot smaller. The histogram shows that there is a more
 balanced distribution between 2% mortality and 4% mortality.
 
 ``` r
-mean(new_covid_america$mortality)
+mean(new_covid_america$Mortality)
 ```
 
-    ## [1] 0.02163083
+    ## [1] 0.08050732
 
 ``` r
-median(new_covid_america$mortality)
+median(new_covid_america$Mortality)
 ```
 
-    ## [1] 0.02048019
+    ## [1] 0.004196266
 
 ``` r
-sd(new_covid_america$mortality)
+sd(new_covid_america$mMrtality)
 ```
 
-    ## [1] 0.01892234
+    ## [1] NA
 
 ``` r
 Mortality <- new_covid_america$Mortality
@@ -778,11 +778,11 @@ Mortality <- new_covid_america$Mortality
 ![](finalproject_files/figure-gfm/mortality%20statistics-2.png)<!-- -->
 
 ``` r
-summary(new_covid_america$mortality)
+summary(new_covid_america$Mortality)
 ```
 
-    ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-    ## 0.000000 0.009595 0.020480 0.021631 0.027851 0.098164
+    ##      Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+    ## 0.0000000 0.0009904 0.0041963 0.0805073 0.0555201 0.7307602
 
 When looking at the share of migrants, we again see a large difference
 between the mean and the median values, suggesting there are a few
