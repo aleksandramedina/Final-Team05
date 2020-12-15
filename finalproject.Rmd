@@ -414,6 +414,649 @@ MigrationShare <- new_covid_america$migration_share
 summary(new_covid_america$migration_share)
 
 ```
+--------------------------------------------------------------
+
+**EUROPE** and **AFRICA** - How the percentage of old people (65 and above) affect COVID-19 mortality?
+
+```{r}
+covid_2 <- read_csv("data2.csv")
+
+# Filter for Europe
+
+covid_europe_and_africa <- covid %>%
+filter(continent == "Europe" | continent == "Africa")
+nrow(covid_europe_and_africa)
+
+covid_europe <- covid %>%
+filter(continent == "Europe")
+
+covid_africa <- covid %>%
+filter (continent == "Africa")
+
+```
+
+**General background**
+
+On 20 Nov. 2020, Europe surpassed 15 million cases, and cases have abrubtly been rising since then. On 19 ov. 2020, Africa surpassed 2 million cases, and cases have steadily been rising since then. Out of all the continents in the world, Europe has the biggest amount of cases to date. It all started in Italy and spread throughout Europe. The continent has over 400 000 deaths. On the other hand, Africa has the second to last place in COVID-19 cases, just after Oceania. The continent has over 50 000 deaths.
+
+Countries vary widely in terms of capacities to prevent, detect and respond to disease outbreaks. In this paper, we aim to explore these factors associated with COVID-19 mortalities at the country level, specifically in the region of Europe and Africa.
+
+We are aware that wealthier countries tend to have more older people because a good economy allocates more resources in the healthcare of the country, which in turn provides good resources for the older population whenever they need them. This is especially important for Europe, as the continent tends to maintain the number of older people in the European countries. With that in mind, we decided to explore how the older population contributes to the acceleration or impedement of the mortality rate.
+
+Since the variable age does not exist in the data set, we will utilize other variables to test our hypothesis.
+
+**VARIABLES** we will use from the dataset:
+
+- **cases_cum** - Variable for cumulative cases. For instance, the number of people who have ever tested positive for coronavirus in a given country, regardless of whether they have recovered.
+
+- **deaths_cum** - Variable for cumulative deaths. It is the total number of people who have died due to coronavirus in a given country.
+
+- **mortality** - Variable that holds the total number of deaths out of total COVID-19 positive infected cases.
+
+- **migration_share** - Variable that refers to the percentage of people who are migrants in the European countries.
+
+- **old_perc** -  Variable that refers to the percentage of old aged population among the total population of the country.
+
+- **pop_older** - It is the total old aged population in a country, including male and female.
+
+
+To begin with the analysis, we’ll first plot a basic scatter plot **(cumulative cases vs cumulative deaths)** showing the initial glimpse making use of the two variables i.e. cases_cum and deaths_cum.
+
+```{r}
+# Map initial glimpse of the data: cumulative deaths & cumulative cases
+
+covid_europe_and_africa %>%
+ggplot(
+mapping = aes(x= deaths_cum,
+y = cases_cum)) +
+  theme_bw() +
+labs(y="Cumulative Cases", x = "Cumulative Deaths") +
+ggtitle("Cumulative Cases vs Cumulative Deaths in Europe and Africa") +
+  scale_x_log10()+
+geom_point()
+```
+
+Since there are four outliers, so removing them will enable a more closer and accurate analysis.This skews
+the plot, not allowing for careful examination of the majority of values. These four values must be omitted. The logarithmic scale supported the creation of this graph as it allowed for a good and legible upward slope of the cases vs deaths line.
+
+```{r}
+# There are two obvious outliers - will remove them to enable a closer analysis. Remove by filtering cumulative cases < 100,000
+
+new_covid_europe_and_africa <- covid_europe %>% filter (cases_cum < 100000)
+```
+
+In order to see the effect of density, as well as to satisfy our curiosity about the effect of the disease on migrants in both Europe and Africa, we am creating new variables without outliers that would prove efficient in further analysis.
+
+```{r}
+new_covid_europe <- covid_europe %>% filter (cases_cum < 100000)
+```
+
+```{r}
+new_covid_africa <- covid_africa %>% filter (cases_cum < 20000)
+```
+
+Now, we can plot the **cumulative cases vs cumulative deaths** again with the new dataset (where the four outliers are removed).
+
+```{r}
+# Plot again cumulative cases and cumulative deaths with the new data set
+
+new_covid_europe_and_africa %>%
+ggplot(
+mapping = aes(x= deaths_cum,
+y = cases_cum)) +
+  theme_bw() +
+labs(y="Cumulative Cases", x = "Cumulative Deaths") +
+ggtitle("Cumulative Cases vs Cumulative Deaths in Europe and Africa (better representation)") +
+geom_point() + stat_smooth(method="lm")
+```
+
+This scatter plot has a **curve going in an upward direction**. Hence, it has a positive correlation between the two variables i.e. cases_cum and deaths_cum. This means that as the number of positive COVID-19 cases rise, the death cases also rise, but in a fast manner. With big increase in cases, there is smaller increase in the total death count.
+
+Now, to get a a better view of how the cumulative cases of the virus are connected with the mortality of COVID-19 cases, we have to create a graph with those variables.
+
+```{r}
+covid_2 %>% filter(cases_cum < 100000) %>%
+ggplot(mapping = aes(x = cases_cum,
+
+y = (deaths_cum/cases_cum)*100)) +
+
+geom_point() +
+geom_smooth(method = lm, se=F) +
+theme_bw() +
+labs(y="COVID-19 Mortality %", x = "Cumulative Cases")
+```
+
+The plot indicates that there is nearly no correlation, but a slightest negative correlation between COVID-19 mortality and cumulative cases overall (including all countries in Europe and Africa).
+
+The residents living in areas with high population density, such as big or metropolitan cities have a higher probability to come into close contact with others and consequently any contagious disease is expected to spread rapidly in dense areas. Now, we’ll analyze and conclude what kind of relationship exists between these.
+
+To analyze how the variables we have chosen react with each other, firstly, we have to create and transform a variable called pop_older so it includes men and women older than 65. Then, we divide pop_older with the population in 2019 to get a variable called older_share. Lastly, we create a variable called mortality to show how the cumulative cases and deaths are connected to one another.
+
+Now, we’ll divide the proportions of old aged population into
+- **low % old population**
+- **moderate % old population**
+- **high % old population**
+in order to see what kind of relationships exist between the two variables.
+
+**Filtering countries that have old aged population % below 4.718 (LOW %).**
+
+
+**Europe** does not have low percentage of old aged population.
+
+
+- **North Africa**
+- Libya
+- Sudan
+
+
+- **East Africa**
+- Burundi
+- Comoros
+- Djibouti
+- Ethiopia
+- Kenya
+- Madagascar
+- Mozambique
+- Rwanda
+- Malawi
+- Somalia
+- South Sudan
+- Tanzania
+- Uganda
+- Zambia
+- Zimbabwe
+
+
+- **Central Africa**
+- Angola
+- Cameroon
+- Equatorial Guinea
+- Congo - Kinshasa
+- Congo - Brazzaville
+- Central African Republic
+- Chad
+- Gabon
+- São Tomé & Príncipe
+
+
+- **West Africa**
+- Benin
+- Burkina Faso
+- Côte d’Ivoire
+- Mauritania
+- Ghana
+- Guinea
+- Gambia
+- Guinea-Bissau
+- Mali
+- Liberia
+- Niger
+- Nigeria
+- Togo
+- Sierra Leone
+- Senegal
+
+
+- **Southern Africa**
+- Botswana
+- Namibia
+- Eswatini
+
+```{r}
+sp1 <- covid_2 %>%
+filter(old_perc < 4.718) %>%
+ggplot(mapping = aes(x = cases_cum,
+
+y = (deaths_cum/cases_cum)*100)) +
+
+geom_point() +
+geom_smooth(method = lm, se=F) +
+theme_bw(base_size = 10) +
+labs(y="COVID-19 Mortality %", x = "Cumulative Cases") +
+ggtitle("Countries with low % old population")
+```
+
+**Filtering countries that have old aged population % between 4.718 and 7.652 (MODERATE %).**
+
+
+- **Eastern Europe/Western Asia**
+- Azerbaijan
+
+
+- **North Africa**
+- Algeria
+- Egypt
+- Morocco
+- Tunisia
+
+
+- **East Africa**
+- Seychelles
+
+
+- **Southern Africa**
+- Lesotho
+- South Africa
+
+```{r}
+sp2 <- covid_2 %>%
+filter(old_perc >= 4.718 & old_perc <= 7.652) %>%
+ggplot(mapping = aes(x = cases_cum,
+
+y = (deaths_cum/cases_cum)*100)) +
+
+geom_point() +
+geom_smooth(method = lm, se=F) +
+theme_bw(base_size = 10) +
+labs(y="COVID-19 Mortality %", x = "Cumulative Cases") +
+ggtitle("Countries with moderate % old population")
+```
+
+**Filtering countries that have old aged population % greater than 8 (HIGH %).**
+
+
+- **Northern Europe**
+- Denmark
+- Estonia
+- Finland
+- Ireland
+- Iceland
+- Latvia
+- Lithuania
+- Norway
+- Sweden
+- United Kingdom
+
+
+- **South Europe**
+- Albania
+- Bulgaria
+- Bosnia & Herzegovina
+- Cyprus
+- North Macedonia
+- Montenegro
+- Greece
+- Italy
+- Malta
+- Slovenia
+- Serbia
+- Portugal
+
+
+- **East Europe**
+- Poland
+- Russia
+- Croatia
+- Slovakia
+- Moldova
+- Romania
+- Hungary
+- Belarus
+
+
+- **West Europe**
+- Belgium
+- Switzerland
+- Germany
+- France
+- Luxembourg
+- Netherlands
+
+
+- **Central Europe**
+- Czechia
+- Austria
+
+
+- **Between Europe and Asia**
+- Armenia
+- Turkey
+- Ukraine
+- Georgia
+
+```{r}
+sp3 <- covid_2 %>%
+filter(old_perc > 8) %>%
+ggplot(mapping = aes(x = cases_cum,
+
+y = (deaths_cum/cases_cum)*100)) +
+
+geom_point() +
+geom_smooth(method = lm, se=F) +
+theme_bw(base_size = 10) +
+labs(y="COVID-19 Mortality %", x = "Cumulative Cases") +
+ggtitle("Countries with high % old population")
+
+grid.arrange(sp1, sp2, sp3, ncol = 2)
+```
+
+According to the plots, the negative correlation was significant for countries with moderate and low percentage of old population, respectively. The overall negative correlation in all three plots might be due to the fact that countries, with time adopted several preventive measures, including better healthcare facilities, professionals to lessen the impact of the virus on its people.
+
+The survival rates seems to have improved, but rising case numbers are causing the total number of deaths increase. The average age of people who developed COVID-19 and those visiting emergency rooms due to the disease dropped as more young people came down with the illness. Thus, there was an increase in younger people hospitalized with COVID-19.
+
+Moreover, Many people at risk are also taking more steps to reduce the chances of being exposed to the virus. People who are older and have more underlying medical conditions are more consistently doing social distancing, frequent handwashing, and other measures to protect themselves.
+
+As we compare the above three plots, we see that the countries that had comparatively lower population of old aged, showed a steeper negative slope (or comparatively more negative correlation than other two). It indicates that due to old population already being low, there was more decrease in mortality rate with rising cases.
+
+While the countries that have moderate percentage of old population, showed not much decrease in mortality rate or less steeper negative slope than the previous. This might be because there is more old population proportion in these countries comparatively.
+
+Based on surveying the countries in Europe and Africa, the countries that have high percentage of old people, are advanced in terms of technology, government and have better healthcare system. Although the countries are advanced, there is a high correlation in % of old population and COVID-19 mortality scatter plot.
+
+
+Now, in order to answer the question that this research paper poses - how does the population of older people (65 and above) as well as the share of migrants in Europe and Africa separately affect the mortality rate, we have to create new variables. We are also giving attention to the confounding variable 'density' and see how it is affected by the number of older people and migrants. For this, three variables are added to the dataset. Firstly, we must create a new variable that combines both the female population that is 65+ and the male population that is 65+. Then, we must look at the share of the population that is 65+ against the total population of a country. This is saved into a new variable too. Here we also define mortality as cumulative deaths divided by cumulative cases.
+
+We are creating variables for Europe and Africa, together and separately.
+
+- For the pop_older variable, we are combining male and female citizens.
+- For the older_share variable, we are dividing pop_older with the overall population in 2019 and then multiplying the result by a hundred.
+- For mortality variable, we are we are dividing deaths_cum with cases_cum and then multiplying the result by a hundred.  
+
+```{r}
+# Create a new variable for population over 65
+# Create a new variable for mortality rate
+# Now check for the variables that we are researching cumulative cases, cumulative deaths, population density, migration share
+
+new_covid_europe_and_africa <- transform(new_covid_europe_and_africa,
+pop_older = older_m + older_f
+)
+new_covid_europe_and_africa <- transform(new_covid_europe_and_africa,
+older_share = (pop_older / population_2019)*100
+)
+new_covid_europe_and_africa <- transform(new_covid_europe_and_africa,
+mortality = (deaths_cum / cases_cum)*100
+)
+
+new_covid_europe <- transform(new_covid_europe,
+pop_older = older_m + older_f
+)
+new_covid_europe <- transform(new_covid_europe,
+older_share = (pop_older / population_2019)*100
+)
+new_covid_europe <- transform(new_covid_europe,
+mortality = (deaths_cum / cases_cum)*100
+)
+
+new_covid_africa <- transform(new_covid_africa,
+pop_older = older_m + older_f
+)
+new_covid_africa <- transform(new_covid_africa,
+older_share = (pop_older / population_2019)*100
+)
+new_covid_africa <- transform(new_covid_africa,
+mortality = (deaths_cum / cases_cum)*100
+)
+
+covid_europe_and_africa <- transform(covid_europe_and_africa,
+mortality = (deaths_cum / cases_cum)*100
+)
+
+
+
+```
+
+Now that we have created the variable called "mortality" for the whole dataset including the outliers of Europe and Africa we can create a graph that represents the cumulative cases by million to make it comparable to the mortality rate.
+ 
+```{r}
+covid_europe_and_africa %>%
+ggplot(
+mapping = aes(x= cases_cum / (population_2019/1000000),
+y = mortality)) +
+  theme_bw() +
+labs(y="Mortality (Per Million People)", x = "Cumulative Cases (Per Million People)") +
+ggtitle("Cumulative Cases vs Mortality per Million People in Europe and Africa") +
+geom_point() + stat_smooth (method = "lm")
+```
+
+The graph shows a peculiar result. It is noticeable that there is one outlier with around 80,000 cases per million people and that country has a mortality rate lower than 2%. Although other countries have a way smaller number of cases per million people than this particular outlier, they themselves are outliers as they have between 6% and 8% mortality rate per million people. The situation regardining mortality rate in both Europe and Africa is not alarming as it is a slope with a downward inclination.
+
+
+We're now making a graph between the population of older people and the mortality rate. This is important because we are putting the newly created variables in context, but also these variables give us a clear perspective of how the population of older people affects the mortality rate in the two continents.
+
+```{r}
+new_covid_europe_and_africa %>%
+ggplot(
+mapping = aes(x=pop_older,
+y = mortality)) +
+    theme_bw() +
+labs(y="Mortality Rate in %", x = "Population of Older People") +
+ggtitle("Population of Older People vs Mortality Rate") +
+geom_point() + stat_smooth(method="lm")
+```
+
+We can see that the mortality rate of countries that have 0 - 1 000 000 people ages 65 and older tends to be around 0.5 to 2.5%. There is an outlier, i.e. a country that has over 2 million older people, but their rate of mortality is close to 2%. If we look at the statistic, Italy has the largest amount of older people out of both Europe and Africa, with a staggering 23% (Eurostat) of the population.
+
+
+Next, we are creating a density plot that portrays where the share of the older population tends to be in Europe.
+
+```{r}
+# geom point is not the best representation since a many points cover each other
+
+new_covid_europe %>%
+ggplot(
+mapping = aes(x=older_share,
+color = region,
+fill = region)) +
+geom_density(alpha = 0.4)
+```
+
+There is strong correlation in the share of older people (15 to 20 percent of older people) and the density which is about 0.06 to 0.08. This means that in most countries in Europe there are 15 to 20 percent of older people. This statement is supported by our previous analysis.
+
+
+
+Then, we are trying to understand the correlation between migrants and mortality in Europe and Africa. We have tried facet wrapping the results by region,
+
+**Migrants in Europe and mortality rate**
+
+Because Europe has a significantly big amount of migrant population - 21.8 million people (Eurostat), we were curious to find out how migrants affect the overall mortality rate.
+
+Firstly, we are trying to see the correlation (if there is any) by using a scatter plot.
+
+```{r}
+new_covid_europe %>%
+ggplot(
+mapping = aes(x=migration_share,
+y = mortality)) +
+theme_bw() +
+labs(y="Mortality Rate in %", x = "Share of Migrants") +
+ggtitle("Mortality Rate vs Share of Migrants in Europe") +
+geom_point() + stat_smooth(method="lm")
+```
+
+This graph shows that in around 20 percent of migrants or less, there is a mortality rate of around 2 percent or less, which is not a big number.
+
+
+Now, we are creating a density plot that portrays where the share of the older population tends to be in Africa, just like we did in Europe.
+
+```{r}
+new_covid_africa %>%
+ggplot(
+mapping = aes(x=older_share,
+color = region,
+fill = region)) +
+geom_density(alpha = 0.4)
+```
+
+There is strong correlation in the share of older people 0 to 3 percent of older people) and the density which is about 0.06 to 0.08. This means that in most countries in Africa there are 0 to 3 percent of older people who collectively make population density of about 0.7, which is strong.
+
+
+
+**Migrants in Africa and mortality rate**
+
+Africa is the hosts the 4th largest number of global international migrants (Wikipedia). Thus, we were curious to find out how migrants affect the overall mortality rate.
+
+Firstly, we are trying to see the correlation (if there is any) by using a scatter plot.
+
+```{r}
+new_covid_africa %>%
+ggplot(
+mapping = aes(x=migration_share,
+y = mortality)) +
+theme_bw() +
+labs(y="Mortality Rate in %", x = "Share of Migrants") +
+ggtitle("Mortality Rate vs Share of Migrants in Africa") +
+geom_point() + stat_smooth(method="lm")
+```
+
+This graph shows that in around 5 percent of migrants or less, there is a mortality rate of around 2 percent or more, which is not a big number.
+ 
+
+**Descriptive Analysis of Europe and Africa**
+
+The descriptive statistics allow us the see the median, mean, minimum and maximum of the variables mortality, old_perc, cases_cum and deaths_cum. These statistics offer insight into a combination of values for those variables specifically for Europe and Africa. This way, we can how severe the effect of the percentage of old people on the overall mortality rate was on these two continents, but also whether COVID-19 struck hard in Europe and Africa.
+
+```{r}
+covid_2 %>%
+summarise(mean_old_perc = mean(old_perc),
+median_old_perc = median(old_perc),
+minimum_old_perc = min(old_perc),
+maximum_old_perc = max(old_perc),
+mean_mortality =
+mean((deaths_cum/cases_cum)*100),
+
+median_mortality = median((deaths_cum/cases_cum)*100),
+minimum_mortality = min((deaths_cum/cases_cum)*100),
+maximum_mortality = max((deaths_cum/cases_cum)*100),
+mean_cases_cum = mean(cases_cum),
+median_cases_cum = median(cases_cum),
+minimum_cases_cum = min(cases_cum),
+maximum_cases_cum = max(cases_cum),
+mean_deaths_cum = mean(deaths_cum),
+median_deaths_cum = median(deaths_cum),
+minimum_deaths_cum = min(deaths_cum),
+maximum_deaths_cum = max(deaths_cum))
+
+```
+
+The mean of the percentage of old people is 9.97, which is a good number of older people spread proportionately. The lowest percentage is Uganda with 1.96 and the highest percentage is Italy with 23.01 percent of older people.
+
+The mean mortality is 1.96% which is an extremely good number considering the health risks of old people facing the coronavirus. The maximum mortality is 6.5% which is also exemplary to see.
+
+The mean cumulative cases are 214474. It is a solid number of cases considering the high number of 15+ mil. cases in Europe and 2+ mil. cases in Africa.
+
+**Descriptive Statistics for Europe**
+
+These statistics show the specifics regarding mortality, cumulative cases and cumulative deaths in Europe with outliers, by using the variable covid_europe.
+
+```{r}
+covid_europe %>%
+summarise(
+mean_mortality =
+mean((deaths_cum/cases_cum)*100),
+
+median_mortality = median((deaths_cum/cases_cum)*100),
+minimum_mortality = min((deaths_cum/cases_cum)*100),
+maximum_mortality = max((deaths_cum/cases_cum)*100),
+mean_cases_cum = mean(cases_cum),
+median_cases_cum = median(cases_cum),
+minimum_cases_cum = min(cases_cum),
+maximum_cases_cum = max(cases_cum),
+mean_deaths_cum = mean(deaths_cum),
+median_deaths_cum = median(deaths_cum),
+minimum_deaths_cum = min(deaths_cum),
+maximum_deaths_cum = max(deaths_cum))
+```
+The above table summarizes the mortality rate, cumulative cases, deaths of different countries in Europe.
+
+Out of all the countries in Europe, the mean of cases is 272105, the median is 84603 and the maximum number of cases from the cumulative statistic is 2127051. The mean of deaths is 6036, the median is 11098 and the maximum amount of deaths in a country (as far as the data set tells us) is 54626. Those are very good numbers that show Europe is handling the pandemic efficiently, albeit the outliers.
+
+The **mean mortality rate in Europe is 1.79%.**
+
+The standard deviation, the histogram and a plot offer more detailed insight on these numbers. That is why we are using them, but with the variable new_covid_europe with removed outliers.
+
+```{r}
+mean(new_covid_europe$cases_cum)
+median(new_covid_europe$cases_cum)
+sd(new_covid_europe$cases_cum)
+hist(new_covid_europe$cases_cum)
+plot(new_covid_europe$cases_cum, type = 'h')
+```
+
+These numbers show that there is a low number of cases from the dataset with removed outliers which shows that Europe can handle the pandemic.
+
+**Descriptive Statistics for Africa**
+
+These statistics show the specifics regarding mortality, cumulative cases and cumulative deaths in Africa with outliers, by using the variable covid_africa.
+
+```{r}
+covid_africa %>%
+summarise(
+mean_mortality =
+mean((deaths_cum/cases_cum)*100),
+
+median_mortality = median((deaths_cum/cases_cum)*100),
+minimum_mortality = min((deaths_cum/cases_cum)*100),
+maximum_mortality = max((deaths_cum/cases_cum)*100),
+mean_cases_cum = mean(cases_cum),
+median_cases_cum = median(cases_cum),
+minimum_cases_cum = min(cases_cum),
+maximum_cases_cum = max(cases_cum),
+mean_deaths_cum = mean(deaths_cum),
+median_deaths_cum = median(deaths_cum),
+minimum_deaths_cum = min(deaths_cum),
+maximum_deaths_cum = max(deaths_cum))
+```
+
+Out of all the countries in Europe, the mean of cases is 37416, the median is 6205 and the maximum number of cases from the cumulative statistic is 765409. The mean of deaths is 898, the median is 108 and the maximum amount of deaths in a country (as far as the data set tells us) is 20485.
+
+**The mean mortality rate in Africa is 2.11%.**
+
+
+The standard deviation, the histogram and a plot offer more detailed insight on these numbers. That is why we are using them, but with the variable new_covid_europe with removed outliers.
+
+```{r}
+mean(new_covid_africa$deaths_cum)
+median(new_covid_africa$deaths_cum)
+sd(new_covid_africa$deaths_cum)
+hist(new_covid_africa$deaths_cum)
+plot(new_covid_africa$deaths_cum, type = 'h')
+```
+
+
+These numbers show that there is a low number of cases from the dataset with removed outliers which shows that Europe can handle the pandemic.
+
+**Analysis of the effect of Population Density on cases and deaths in Europe and Africa**
+
+```{r}
+pd1 <- covid_europe_and_africa %>%
+filter(pop_density < 2000 & cases_cum < 2500000) %>%
+ggplot(mapping = aes(x = pop_density,
+y = cases_cum)) +
+
+theme_bw(base_size = 10) +
+labs(y="Cumulative Cases", x = "Population Density (sq. kms)") +
+ggtitle("Total Cases vs Population Density") +
+geom_point() + geom_smooth(method=lm, se=F)
+
+pd2 <- covid_europe_and_africa %>% filter(pop_density < 1000) %>%
+ggplot(mapping = aes(x = pop_density,
+y = deaths_cum)) +
+
+theme_bw(base_size = 10) +
+labs(y="Cumulative Deaths", x = "Population Density (sq. kms)") +
+ggtitle("Total Deaths vs Population Density") +
+geom_point() + geom_smooth(method=lm, se=F)
+
+grid.arrange(pd1, pd2, ncol = 2)
+```
+
+Population density refers to the number of people living in an area per square kilometer.
+
+Only the right scatter plots shows a strong positive correlation between the two variables i.e.
+deaths_cum vs pop_density. The lesser slope or inclination in the first scatter plot might be due to the fact that there are many countries in Europe do not have a very high density of people living in one square kilometer.
+
+In the first case, the plot indicates that as the country’s population density increases, there is slight fall in number of infected cases.
+
+The reason behind it might be because COVID-19 is highly contagious and there is higher risk of spread in areas where more people live per unit area. Like in Europe, where many people live in close proximity to one another. Take for example Malta, or Netherlands, the former having 1380 people per square kilometer, the latter having 488 people per squarke kilometer. In Africa, there are also countries with a high number of people living in close proximity to one another. For example, Mauritius with 623 people per square kilomter or Rwanda with 499 people per square kilometer. These statistics explain the upward slope. In the second case, the same reason comes into play and countries that have more population living per unit area, have more infected cases, and as a result more deaths. Thus, giving a positive correlation.
+
+**Result** - Population density **does** have a positive effect on increasing the number of cases with a steep line, while it also **does** have a positive effect on deaths of COVID-19 virus in Europe and Africa, but with a more upward slope.
+
+Drawbacks of this analysis: The dataset used for this analysis confuses the countries that belong to two or three continents at the same time. For example, Malta is placed both in Europe and in North Africa; Azerbaijan, Armenia, and Georgia are placed both in Europe and Asia. That is the reason why some results may be unexpected and a lot of deleting had to be done. This type of classification of countries into continents creates confusion when we were trying to focus specifically on Europe and on Africa as two separate continents. There needs to be an additional method of classification that would put one country as belonging to one continent. A way that that method can be utilized is: classifying the countries by area - how much of the country belongs more to one continent or another.  
+
+Source: https://ec.europa.eu/eurostat/cache/infographs/elderly/index.html#:~:text=In%202016%2C%2019.2%25%20of%20the,lowest%20in%20Ireland%20(13.2%25).
+
+Source: https://ec.europa.eu/eurostat/statistics-explained/index.php/Migration_and_migrant_population_statistics#:~:text=2.4%20million%20immigrants%20entered%20the,non%2DEU%2D27%20citizens.
+
+Source: https://en.wikipedia.org/wiki/Intra-African_migration#:~:text=Africa%20hosts%20the%204th%20largest,people%20moved%20between%20African%20countries.
 
 --------------------------------------------------------------
 
