@@ -2852,7 +2852,7 @@ ggplot(data = covid_asia, mapping = aes(x = (deaths_cum/cases_cum)*100), fill = 
 
 ![](finalproject_files/figure-gfm/unnamed-chunk-37-1.png)<!-- -->
 
-This histogram shows that most of the countries have less than 10%
+This histogram plot shows that most of the countries have less than 10%
 mortality rate, with Yemen being an outlier having 29% mortality %.
 
 ``` r
