@@ -4,6 +4,36 @@ author: "Team 5"
 date: "December 8, 2020"
 output: github_document
 ---
+No aspect of our lives has been spared by the impact of the coronavirus pandemic and—to some extent—the virus has done damage that needs time to be repaired. The virus has challenged healthcare systems across the world in a way unprecedented in modern times. Older people are disproportionately affected by the COVID-19 pandemic, which has had a profound impact on research as well as clinical service delivery. They are bearing the consequences of the pandemic as a group at the highest risk of hospitalisation and death from the COVID-19 illness. In this research paper, we’ll take a closer look at the share of population aged 65 or older and population densities of specific countries across continents where data is currently gathered on a daily basis. 
+
+As proven by studies, the risk for severe illness with COVID-19 increases with age, with older adults at highest risk.(Source: Centers for Disease Control and Prevention) Although all age groups are at risk of contracting COVID-19, older people face a significant risk of developing severe complications if they contract the disease due to physiological changes that come with ageing and potential underlying health conditions. For example, people in their 50s are at a higher risk for severe complications than people in their 40s. Similarly, people in their 60s or 70s are, in general, at higher risk for severe complications than people in their 50s. The greatest risk for severe complications caused by COVID- 19 is among those aged 85 or older.
+
+Our research question is: How does the proportion of people aged 65+ affect Covid-19 mortality across continents? We are focusing on people 65 and older as the focal point of our investigation. 
+
+Is the older population more likely to be influenced in greater magnitude by the virus? How is the older population divided in continents around the world? What are countries doing to help the older population? 
+
+The research done and data provided by WZB, Institutions and Political Inequality Group stands out due to its detailed annotation. However, even more commendable is its complete transparency with the data collected and the way it has been manipulated. This empowers readers to, firstly, gain a deeper understanding of the results and the workings of statistical models, and, secondly, contribute with their own analysis. The process is a lengthy one and filled with trial and error. Firstly, one must go through all the variables and understand what they entail. This resulted in 132 columns.
+
+Then the team ran through the data set to see its structure. Going through the table produced, the team decided how to equally distribute the workload. It made sense to distribute geographically. We divided the world into three vertical strips:
+
+- North America, Central America and South America,
+- Europe and Africa,
+- Asia, Oceania and Australia.
+
+COVID-19 mortality is the number of deaths out of the total number of infected cases. Studies have shown that COVID-19 mortality can be explained by age, obesity, and underlying diseases, such as hypertension, diabetes, and coronary heart disease, as well as clinical symptoms, complications, hospital care, previous immunity and virus mutations. (Source: Liang, Li-Lin, et al.) Countries vary widely in terms of capacities to prevent, detect and respond to disease outbreaks. 
+
+In this research paper we are going to use these variables from the data set: 
+
+- cases_cum - Variable for cumulative cases. For instance, the number of people who have ever tested positive for coronavirus in a given country, regardless of whether they have recovered.
+- deaths_cum - Variable for cumulative deaths. It is the total number of people who have died due to coronavirus in a given country.
+- mortality - Variable that holds the total number of deaths out of total COVID-19 positive infected cases. Additionally, we measured the mortality in the continents where data was collected by using mortality per million people over cumulative cases per million people.
+- old_perc* - Variable that refers to the percentage of the old aged population among the total population of the country.
+- pop_older - It is the total old aged population in a country, including male and female.
+
+*old_perc is a variable created in addition to the already existing dataset. It is needed to divide the population of older people into percentages across the countries of the world for better representation, clearer point of view and overall better understanding and analysis of the data.
+
+This is how we analyzed the data given to us, how we observed it and what results the data yielded. 
+
 
 ```{r load-packages, message=FALSE}
 library(tidyverse) 
@@ -16,24 +46,16 @@ install.packages("tufte")
 library(ggplot2)
 library(gridExtra)
 ```
+--------------------------------------------------------------
 
-The research done and data provided by WZB, Institutions and Political Inequality Group stands out due to its detailed annotation. However, even more commendable is its complete transparency with the data collected and the way it has been manipulated. This empowers readers to, firstly, gain a deeper understanding of the results and the workings of statistical models, and, secondly, contribute with their own analysis.
+**North America** and **Latin America and Caribbean** by Aleksandra
 
-This is exactly what my teammates and I did. The process is a lengthy one and filled with trial and error. Firstly, one must go through all the variables and understand what they entail. This resulted in 132 columns.
+Firstly, one must go through all the variables and understand what they entail. This resulted in 132 columns.
 
 ```{r covid}
 covid <- read_csv("data.csv")
 # names(covid)
 ```
-
-Then the team ran through the data set to see its structure. Going through the table produced, the team decided how to equally distribute the workload. It made sense to distribute geographically. We divided the world into three vertical strips: 
-
-- North America, Central America and South America,
-
-- Europe and Africa,
-
-- Asia, Oceania and Australia.
-
 
 I chose to analyze the first part: North America, Central America and South America. To do this, the data set had to be filtered for these three values and saved into a new variable. After skimming through the data, I realized that countries belonging to all three parts are saved under the same category for continent = America. The data set was filtered for countries, where the continent value is set equal to America and then saved into a new variable.
 
@@ -307,7 +329,7 @@ A problem with the point plots is that many countries have similar values, thus 
 
 When inspecting the mortality density graph, it is surprising to see that countries classified as North America, which are often considered to be wealthier, with better health care systems, have much higher mortality rates. Again, one must be careful to look for simple explanations as the dataset consists of only two countries. In the case of North America, a study inspecting Covid-19 mortality rates state by state would prove to be more conclusive. 
 
-Inspecting Latin America & Caribbean shows that the vast majority of countries have mortality rates below 3.5%. However, Bolivia and Ecuador are extreme outliers that have mortality rates higher than 6%. 
+Inspecting Latin America & Caribbean shows that the vast majority of countries have mortality rates below 0.35 / Million. However, Bolivia and Ecuador are extreme outliers that have mortality rates higher than 0.65 / Million. 
 
 However, superimposing the mortality plot on top of the plot representing the share of population aged 65+ proves inconclusive. There seems to be little to no relationship between the share of the population aged 65+ and its respective Covid-19 mortality rates. This was also observed in the previous point plot, where the share of the population aged 65+ was plotted against mortality rates and the plot resulted in an almost horizontal plot with the slope of around 0.
 
@@ -353,17 +375,6 @@ older <- new_covid_america_without_outlier %>% filter (older_share > 20)
 deadly <-new_covid_america_without_outlier %>% filter (mortality > 6)
 # deadly
 
-  new_covid_america_without_outlier %>%
-  ggplot(
-    mapping = aes(x=migration_share,
-                  color = region,
-                  fill = region)) +
-  theme_bw()+
-  
-  labs(y="Frequency", x="Migrant share of the population")+
-  ggtitle("Density plot of countries by the share of migrants")+
-  
-  geom_density(alpha=0.4)
 
 ```
 
@@ -501,7 +512,7 @@ summary(new_covid_america$migration_share)
 
 --------------------------------------------------------------
 
-**EUROPE** and **AFRICA**
+**EUROPE** and **AFRICA** by Stefan
 
 ```{r}
 covid_3 <- read_csv("data3.csv")
@@ -1140,7 +1151,7 @@ Drawbacks of this analysis: The dataset used for this analysis confuses the coun
 
 -------------------------------------------------------------
 
-**ASIA-PACIFIC REGION**
+**ASIA-PACIFIC REGION** by Ronit
 
 ```{r load-data, message=FALSE}
 covid <- read_csv("data.csv")
@@ -1521,5 +1532,13 @@ Source: Centers for Disease Control and Prevention. 2020. COVID-19 And Your Heal
 Source: Who.int. 2020. WHO Delivers Advice And Support For Older People During COVID-19.
 
 <https://www.who.int/news-room/feature-stories/detail/who-delivers-advice-and-support-for-older-people-during-covid-19#:~:text=Although%20all%20age%20groups%20are,potential%20underlying%20health%20conditions.>
+
+Source: Older Adults at greater risk of requiring hospitalization or dying if diagnosed with COVID-19
+
+<https://www.cdc.gov/coronavirus/2019-ncov/need-extra-precautions/older-adults.html#:~:text=Age%20Increases%20Risk%20for%20Severe%20Illness&text=The%20greatest%20risk%20for%20severe,intensive%20care%2C%20or%20a>
+
+Source: Liang, Li-Lin, et al. "Covid-19 mortality is negatively associated with test number and government effectiveness." Scientific reports 10.1 (2020): 1-7.
+
+<https://www.nature.com/articles/s41598-020-68862-x>
 
 -------------------------------------------------------------
