@@ -181,16 +181,14 @@ seems to be a pattern.
 
 covid_america %>%
   ggplot(
-    mapping = aes(x= deaths_cum,
-                  y = cases_cum)) +
+    mapping = aes(y = deaths_cum,
+                  x = cases_cum)) +
   theme_bw()+
-  labs(y="Cumulative cases", x="Cumulative deaths")+
+  labs(x="Cumulative cases", y="Cumulative deaths")+
   ggtitle("Cumulative cases vs Cumulative deaths in the Americas")+
   scale_x_log10()+
     geom_point()
 ```
-
-    ## Warning: Transformation introduced infinite values in continuous x-axis
 
 ![](finalproject_files/figure-gfm/deaths_cum,%20cases_cum-1.png)<!-- -->
 
@@ -237,26 +235,24 @@ Covid-19 mortality across the globe.
 
 To do this, I started with the initial step of measuring Covid-19
 mortality. In this paper, Covid-19 mortality is measured as the
-proportion of cumulative deaths when measured against cumulative cases.
-Of course one must keep in mind the limitations, when measuring and
-defining these two variables as different governments around the world
-report data based on different definitions.
+proportion of cumulative deaths when measured against cumulative cases
+per million. Of course one must keep in mind the limitations, when
+measuring and defining these two variables as different governments
+around the world report data based on different definitions.
 
 After plotting the two variables against each other, a clearer pattern
 emerges. If mortality is measured as the slope of the graph, where the x
 value is the number of cumulative cases and the y value is the number of
-cumulative deaths, there seems to be a linear relationship until a
-certain point (around 1,000,000 and 1,500,000 cumulative cases), where
-mortality plateaus. There are definitely too few countries with high
-cumulative death numbers to trust this pattern. Therefore, a similar
-process has to be repeated, where the outlier has to be filtered out
-(after creating a separate variable, we find the outlying country with
-cumulative deaths greater than 7,500,000 is Mexico). Now plotting the
-new variable that does not entail Mexico, the relationship is obviously
-linear. We learn that, in the Americas, cumulative deaths are
-proportionally related to cumulative cases. From here further research
-discussing the implications and related policies from governments could
-be done.
+cumulative deaths, there seems to somewhat of a linear relationship.
+However, there are definitely too few countries with high cumulative
+death numbers to trust this pattern. Therefore, a similar process has to
+be repeated, where the outlier has to be filtered out (after creating a
+separate variable, we find the outlying country with cumulative deaths
+greater than 7,500,000 is Mexico). Now plotting the new variable that
+does not entail Mexico, there is a lot stronger linear relationship. We
+learn that, in the Americas, cumulative deaths are proportionally
+related to cumulative cases. From here further research discussing the
+implications and related policies from governments could be done.
 
 ``` r
 # Plot again cumulative cases and cumulative deaths with the new data set
@@ -321,7 +317,7 @@ female population that is 65+ and the male population that is 65+. Then,
 we must look at the share of the population that is 65+ against the
 total population of a country. This is saved into a new variable too.
 Here we also define mortality as cumulative deaths divided by cumulative
-cases.
+cases per million.
 
 ``` r
 # Create a new variable for population over 65
@@ -363,13 +359,13 @@ new_covid_america <- transform(new_covid_america,
 
 Now we can finally plot Covid-19 mortality against the share of
 population that is 65 or older. While the uncertainty is quite high,
-there seems to be a negative relationship between the two variables.
+there seems to be a negligible relationship between the two variables.
 This is quite surprising as our initial hypothesis stated that countries
 that have a larger proportion of citizens aged 65 or higher would see
 higher Covid-19 mortality rates. The data suggests that as the share of
-population aged 65 or older increases, Covid-19 mortality falls. This
-might be due to the small dataset or due to powerful confounding
-variables.
+population aged 65 or older increases, Covid-19 mortality doesn’t
+change. This might be due to the small dataset or due to powerful
+confounding variables.
 
 ``` r
   new_covid_america_without_outlier %>%
@@ -457,19 +453,21 @@ north_america <- new_covid_america %>% filter (region == "North America")
 It makes sense to further inspect mortality rates, when dividing the
 dataset in three tiers:
 
-  - Tier 1: older\_share \< 10
+  - Tier 1: share of population aged 65 or older is less than 10%
 
-  - Tier 2: 10 \<= older\_share \>= 15
+  - Tier 2: share of population aged 65 or older is larger than 10% but
+    less than 15%
 
-  - Tier 3: older\_share \> 15
+  - Tier 3: share of population aged 65 or older is larger than 15%
 
 We see that most countries in the Americas fit within the first tier,
 which again proves that most of the countries in the Americas have young
-populations. Tier 2 and tier 3 has too few data points to draw a
-conclusion and tier 1 seems to counterintuitively state that countries
-with older populations have lower mortality rates. This could have
-multiple explanations, but most likely is affected by confounding
-variables such as income levels.
+populations. Tier 2 and tier 3 have too few data points to draw a
+conclusion and tier 1 seems to show no significant relationship either.
+This could have multiple explanations, but most likely is affected by
+confounding variables such as income levels. Countries with larger
+population shares of people aged 65+ are usually wealthier countries
+with better healthcare systems.
 
 ``` r
 first_new_covid_america_without_outlier <- new_covid_america_without_outlier %>% filter (older_share < 10)
@@ -548,11 +546,11 @@ than the age of the population.
 
 When inspecting the mortality density graph, it is surprising to see
 that countries classified as North America, which are often considered
-to be wealthier, with better health care systems, have much higher
-mortality rates. Again, one must be careful to look for simple
-explanations as the dataset consists of only two countries. In the case
-of North America, a study inspecting Covid-19 mortality rates state by
-state would prove to be more conclusive.
+to be wealthier, with better health care systems, have higher mortality
+rates. Again, one must be careful to look for simple explanations as the
+dataset consists of only two countries. In the case of North America, a
+study inspecting Covid-19 mortality rates state by state would prove to
+be more conclusive.
 
 Inspecting Latin America & Caribbean shows that the vast majority of
 countries have mortality rates below 0.35 / Million. However, Bolivia
@@ -638,13 +636,14 @@ Venezuelans returned from Brazil daily via the border at Pacaraima
 
 The hypothesis would suggest that countries with a higher share of their
 population consisting of migrants would have respectively higher
-Covid-19 mortality rates. Superimposing the two density plots onto each
-other, we see a strong correlation in North America and a weaker (but
-not non-existing) correlation in Latin America & Caribbean. Creating
-graphs of both Mortality per million vs Population density and Mortality
-per million vs Migrant share of the population shows to be some of the
-strongest correlation revealed in this research paper, when it comes to
-the Ameriacs. This could be explored in further research papers.
+Covid-19 mortality rates. Creating graphs of both Mortality per million
+vs Population density and Mortality per million vs Migrant share of the
+population shows to be some of the strongest correlations revealed in
+this research paper, when it comes to the Americas. Often migrant
+population live in denser areas, which are already more prone to a
+deadlier spread of infections. Considerable proof to this statement is
+visible in both graphs. This could be explored in further research
+papers.
 
 ``` r
 southamerica <- new_covid_america %>% filter (region == "Latin America & Caribbean")
@@ -794,8 +793,7 @@ summary(new_covid_america$CumulativeCases)
 However, when looking at mortality, the outliers are not as obvious as
 with cumulative cases. Some interesting further research exploring this
 relationship could also be done. The difference between the median and
-the mean is a lot smaller. The histogram shows that there is a more
-balanced distribution between 2% mortality and 4% mortality.
+the mean is a lot smaller.
 
 ``` r
 mean(new_covid_america$Mortality)
