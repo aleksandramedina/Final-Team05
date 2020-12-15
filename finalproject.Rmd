@@ -14,6 +14,7 @@ library(magrittr)
 library(dplyr) 
 install.packages("tufte")
 library(ggplot2)
+library(gridExtra)
 ```
 
 The research done and data provided by WZB, Institutions and Political Inequality Group stands out due to its detailed annotation. However, even more commendable is its complete transparency with the data collected and the way it has been manipulated. This empowers readers to, firstly, gain a deeper understanding of the results and the workings of statistical models, and, secondly, contribute with their own analysis.
@@ -90,13 +91,22 @@ After plotting the two variables against each other, a clearer pattern emerges. 
 
 # Plot again cumulative cases and cumulative deaths with the new data set
 
+new_covid_america_without_outlier <- transform (new_covid_america_without_outlier,
+                                                CumulativeCases = (cases_cum)/((population_2019)/1000000)
+                                                                   )
+
+new_covid_america <- transform (new_covid_america,
+                                                CumulativeCases = (cases_cum)/((population_2019)/1000000)
+                                                                   )
+
+
 new_covid_america %>%
   ggplot(
     mapping = aes(x= deaths_cum,
-                  y = cases_cum)) +
+                  y = CumulativeCases)) +
   theme_bw()+
   
-  labs(y="Cumulative cases", x="Cumulative deaths")+
+  labs(y="Cumulative cases per Million", x="Cumulative deaths")+
   ggtitle("Cumulative cases vs Cumulative deaths in the Americas, excluding outliers")+
   
   geom_point()+
@@ -111,10 +121,10 @@ new_covid_america_without_outlier <- new_covid_america %>% filter (deaths_cum < 
 new_covid_america_without_outlier %>%
   ggplot(
     mapping = aes(x= deaths_cum,
-                  y = cases_cum)) +
+                  y = CumulativeCases)) +
   theme_bw()+
   
-  labs(y="Cumulative cases", x="Cumulative deaths")+
+  labs(y="Cumulative cases per Million", x="Cumulative deaths")+
   ggtitle("Cumulative cases vs Cumulative deaths in the Americas, excluding outliers")+
   
   geom_point()+
@@ -139,9 +149,11 @@ new_covid_america_without_outlier <- transform(new_covid_america_without_outlier
                               )
 
 new_covid_america_without_outlier <- transform(new_covid_america_without_outlier, 
-                              mortality = (deaths_cum / cases_cum)*100
+                              mortality = (deaths_cum / cases_cum)
                               )
-
+new_covid_america_without_outlier <- transform(new_covid_america_without_outlier, 
+                              Mortality = (mortality)/((population_2019)/1000000)
+                              )
 
 
 new_covid_america <- transform(new_covid_america, 
@@ -153,7 +165,11 @@ new_covid_america <- transform(new_covid_america,
                               )
 
 new_covid_america <- transform(new_covid_america, 
-                              mortality = (deaths_cum / cases_cum)*100
+                              mortality = (deaths_cum / cases_cum)
+                              )
+
+new_covid_america <- transform(new_covid_america, 
+                              Mortality = (mortality)/((population_2019)/1000000)
                               )
 
 ```
@@ -165,7 +181,7 @@ Now we can finally plot Covid-19 mortality against the share of population that 
   new_covid_america_without_outlier %>%
   ggplot(
     mapping = aes(x=older_share,
-                  y = mortality)) +
+                  y = Mortality)) +
   theme_bw()+
   
   labs(y="Mortality", x="Share of population aged 65+")+
@@ -197,7 +213,7 @@ There are two details that seemed quite shocking. Greenland is classified as “
   new_covid_america_without_outlier %>%
   ggplot(
     mapping = aes(x=older_share,
-                  y = mortality,
+                  y = Mortality,
                   color = region,
                   fill = region)) +
  theme_bw()+
@@ -237,50 +253,51 @@ first_new_covid_america_without_outlier <- new_covid_america_without_outlier %>%
 second_new_covid_america_without_outlier <- new_covid_america_without_outlier %>% filter (older_share >= 10 & older_share <= 15)
 third_new_covid_america_without_outlier <- new_covid_america_without_outlier %>% filter (older_share > 15)
 
-first_new_covid_america_without_outlier %>%
+sp1 <- first_new_covid_america_without_outlier %>%
   ggplot(
     mapping = aes(x=older_share,
-                  y = mortality,
+                  y = Mortality,
                   color = region,
                   fill = region)) +
  theme_bw()+
   
   labs(y="Mortality", x="Share of population aged 65+")+
-  ggtitle("Tier 1: Proportion of population aged 65+ vs Mortality; categorized by region")+
+  ggtitle("Tier 1")+
   
   geom_point()+
   stat_smooth(method="lm")
 
 
-second_new_covid_america_without_outlier %>%
+sp2 <- second_new_covid_america_without_outlier %>%
   ggplot(
     mapping = aes(x=older_share,
-                  y = mortality,
+                  y = Mortality,
                   color = region,
                   fill = region)) +
  theme_bw()+
   
   labs(y="Mortality", x="Share of population aged 65+")+
-  ggtitle("Tier 2: Proportion of population aged 65+ vs Mortality; categorized by region")+
+  ggtitle("Tier 2")+
   
   geom_point()+
   stat_smooth(method="lm")
 
-third_new_covid_america_without_outlier %>%
+sp3 <- third_new_covid_america_without_outlier %>%
   ggplot(
     mapping = aes(x=older_share,
-                  y = mortality,
+                  y = Mortality,
                   color = region,
                   fill = region)) +
  theme_bw()+
   
   labs(y="Mortality", x="Share of population aged 65+")+
-  ggtitle("Tier 3: Proportion of population aged 65+ vs Mortality; categorized by region")+
+  ggtitle("Tier 3")+
   
   geom_point()+
   stat_smooth(method="lm")
 
 
+grid.arrange(sp1, sp2, sp3, ncol=1)
 ```
 
 A problem with the point plots is that many countries have similar values, thus the points lie on top of each other, masking the magnitude of the information in the data available. This is where density plots make a great choice. Therefore, the same relationships are now revisited through density plots in hope to discover deeper insights. Now the overall distribution of values across the continents can be seen. Since North America has only two values, it is not visible on the graph, however, this shortcoming has already been discussed. Therefore, the bulk of the analysis is about Central and South America. The graph clearly depicts that Latin American & Caribbean countries are relatively ‘young’ countries with only a small share of population aged 65+. The vast majority of countries are in the 5-10% range. In fact, only Puerto Rico has more than 20% of its population aged 65+. This prompts the question whether in the context of Latin America & Caribbean, there are other variables that play a stronger role in the mortality of Covid-19 than the age of the population.
@@ -312,7 +329,7 @@ However, superimposing the mortality plot on top of the plot representing the sh
 
   new_covid_america_without_outlier %>%
   ggplot(
-    mapping = aes(x=mortality,
+    mapping = aes(x=Mortality,
                   color = region,
                   fill = region)) +
  theme_bw()+
@@ -322,7 +339,7 @@ However, superimposing the mortality plot on top of the plot representing the sh
   
   geom_density(alpha=0.4)
   
-  
+
   
   
 older <- new_covid_america_without_outlier %>% filter (older_share > 20)
@@ -333,14 +350,6 @@ north_america
 deadly <-new_covid_america_without_outlier %>% filter (mortality > 6)
 deadly
 
-```
-
-Although this is not the main focus of the research paper, we wanted to explore a possible confounding variable, since we could not find a strong relationship between our chosen variables. Reports of Covid-19 case explosions in migrant communities beg the question whether there is a correlation between mortality rates and the migrant population as a share of the total population. When it comes to the Americas, the most affected are Venezuelan migrants. "As of 30 October 2020, more than 136,000 Venezuelan migrants and refugees had returned to Venezuela from other countries in the region (IOM and UN OCHA, 2020). At its peak, 600 Venezuelans returned from Colombia daily and an average of 88 Venezuelans returned from Brazil daily via the border at Pacaraima (Coordination Platform for Refugees and Migrants from Venezuela, 2020)." (Migration Data Portal)
-
-
-The hypothesis would suggest that countries with  a higher share of their population consisting of migrants would have respectively higher Covid-19 mortality rates. Superimposing the two density plots onto each other, we see a strong correlation in North America and a weaker (but not non-existing) correlation in Latin America & Caribbean. This could be explored in further research papers.
-
-```{r older_share migration_share}
   new_covid_america_without_outlier %>%
   ggplot(
     mapping = aes(x=migration_share,
@@ -353,7 +362,79 @@ The hypothesis would suggest that countries with  a higher share of their popula
   
   geom_density(alpha=0.4)
 
+```
 
+Although this is not the main focus of the research paper, we wanted to explore a possible confounding variable, since we could not find a strong relationship between our chosen variables. Reports of Covid-19 case explosions in migrant communities beg the question whether there is a correlation between mortality rates and the migrant population as a share of the total population. When it comes to the Americas, the most affected are Venezuelan migrants. "As of 30 October 2020, more than 136,000 Venezuelan migrants and refugees had returned to Venezuela from other countries in the region (IOM and UN OCHA, 2020). At its peak, 600 Venezuelans returned from Colombia daily and an average of 88 Venezuelans returned from Brazil daily via the border at Pacaraima (Coordination Platform for Refugees and Migrants from Venezuela, 2020)." (Migration Data Portal)
+
+
+The hypothesis would suggest that countries with  a higher share of their population consisting of migrants would have respectively higher Covid-19 mortality rates. Superimposing the two density plots onto each other, we see a strong correlation in North America and a weaker (but not non-existing) correlation in Latin America & Caribbean. This could be explored in further research papers.
+
+```{r older_share migration_share}
+southamerica <- new_covid_america %>% filter (region == "Latin America & Caribbean")
+northamerica <- new_covid_america %>% filter (region == "North America")
+
+sp4 <- southamerica %>%
+  ggplot(
+    mapping = aes(x = pop_density,
+                  y = Mortality,
+                  color = region,
+                  fill = region)) +
+ theme_bw()+
+  
+  labs(y="Mortality", x="Population density")+
+  ggtitle("Latin America & Caribbean")+
+  
+  geom_point()+
+  stat_smooth(method="lm")
+
+sp5 <- northamerica %>%
+  ggplot(
+    mapping = aes(x = pop_density,
+                  y = Mortality,
+                  color = region,
+                  fill = region)) +
+ theme_bw()+
+  
+  labs(y="Mortality", x="Population density")+
+  ggtitle("North America")+
+  
+  geom_point()+
+  stat_smooth(method="lm")
+
+
+  grid.arrange(sp4, sp5, ncol=1)
+
+  
+  sp6 <- northamerica %>%
+  ggplot(
+    mapping = aes(x = migration_share,
+                  y = Mortality,
+                  color = region,
+                  fill = region)) +
+ theme_bw()+
+  
+  labs(y="Mortality", x="Migration share")+
+  ggtitle("North America")+
+  
+  geom_point()+
+  stat_smooth(method="lm")
+  
+    sp7 <- southamerica %>%
+  ggplot(
+    mapping = aes(x = migration_share,
+                  y = Mortality,
+                  color = region,
+                  fill = region)) +
+ theme_bw()+
+  
+  labs(y="Mortality", x="Migration share")+
+  ggtitle("South America")+
+  
+  geom_point()+
+  stat_smooth(method="lm")
+
+    
+  grid.arrange(sp6, sp7, ncol=1)
 ```
 
 
@@ -371,7 +452,7 @@ To further discuss the shortcomings of the dataset and analysis itself, it is us
 mean(new_covid_america$cases_cum, na.rm = TRUE)
 median(new_covid_america$cases_cum, na.rm = TRUE)
 sd(new_covid_america$cases_cum, na.rm = TRUE)
-CumulativeCases <- new_covid_america$cases_cum
+CumulativeCases <- new_covid_america$CumulativeCases
   hist(CumulativeCases)
 
   plot(CumulativeCases, type = 'b', main = "Cumulative cases of Covid-19 in the Americas")
@@ -388,7 +469,7 @@ mean(new_covid_america$mortality)
 median(new_covid_america$mortality)
 sd(new_covid_america$mortality)
 
-Mortality <- new_covid_america$mortality
+Mortality <- new_covid_america$Mortality
   hist(Mortality)
 
   plot(Mortality, type = 'b', main = "Covid-19 mortality in the Americas")
