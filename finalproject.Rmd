@@ -91,9 +91,6 @@ After plotting the two variables against each other, a clearer pattern emerges. 
 
 # Plot again cumulative cases and cumulative deaths with the new data set
 
-new_covid_america_without_outlier <- transform (new_covid_america_without_outlier,
-                                                CumulativeCases = (cases_cum)/((population_2019)/1000000)
-                                                                   )
 
 new_covid_america <- transform (new_covid_america,
                                                 CumulativeCases = (cases_cum)/((population_2019)/1000000)
@@ -118,6 +115,11 @@ outlier_deaths
 
 
 new_covid_america_without_outlier <- new_covid_america %>% filter (deaths_cum < 75000)
+
+new_covid_america_without_outlier <- transform (new_covid_america_without_outlier,
+                                                CumulativeCases = (cases_cum)/((population_2019)/1000000)
+                                                                   )  
+
 new_covid_america_without_outlier %>%
   ggplot(
     mapping = aes(x= deaths_cum,
@@ -129,7 +131,8 @@ new_covid_america_without_outlier %>%
   
   geom_point()+
   stat_smooth(method="lm")
-  
+
+
 ```
 
 Now after defining and analyzing mortality and its relationship to cumulative cases and cumulative deaths, we can move on to the variables analyzed in this paper. For this, three variables are added to the dataset. Firstly, we must create a new variable that combines both the female population that is 65+ and the male population that is 65+. Then, we must look at the share of the population that is 65+ against the total population of a country. This is saved into a new variable too. Here we also define mortality as cumulative deaths divided by cumulative cases.

@@ -272,13 +272,19 @@ be done.
 ``` r
 # Plot again cumulative cases and cumulative deaths with the new data set
 
+
+new_covid_america <- transform (new_covid_america,
+                                                CumulativeCases = (cases_cum)/((population_2019)/1000000)
+                                                                   )
+
+
 new_covid_america %>%
   ggplot(
     mapping = aes(x= deaths_cum,
-                  y = cases_cum)) +
+                  y = CumulativeCases)) +
   theme_bw()+
   
-  labs(y="Cumulative cases", x="Cumulative deaths")+
+  labs(y="Cumulative cases per Million", x="Cumulative deaths")+
   ggtitle("Cumulative cases vs Cumulative deaths in the Americas, excluding outliers")+
   
   geom_point()+
@@ -294,51 +300,77 @@ outlier_deaths <- new_covid_america %>% filter (deaths_cum > 75000)
 outlier_deaths
 ```
 
-    ## # A tibble: 1 x 132
-    ##      X1 geoid2 date       month   day  year elapsed date_rep   cases deaths
-    ##   <dbl> <chr>  <date>     <dbl> <dbl> <dbl>   <dbl> <date>     <dbl>  <dbl>
-    ## 1   124 MEX    2020-11-22    11    21  2020     326 2020-11-22  6719    550
-    ## # … with 122 more variables: country <chr>, population_2019 <dbl>,
-    ## #   continent <chr>,
-    ## #   Cumulative_number_for_14_days_of_COVID.19_cases_per_100000 <dbl>,
-    ## #   cases_cum <dbl>, deaths_cum <dbl>, deaths_cum_log <dbl>,
-    ## #   deaths_cum_l7 <dbl>, deaths_cum_g7 <dbl>, region <chr>, gov_effect <dbl>,
-    ## #   trade <dbl>, ineq <dbl>, gdp_pc <dbl>, pop_tot <dbl>, older_m <dbl>,
-    ## #   older_f <dbl>, air_travel <dbl>, fdi <dbl>, pop_density <dbl>, urban <dbl>,
-    ## #   migration_share <dbl>, oil <dbl>, soc_insur_cov <dbl>, soc_contrib <dbl>,
-    ## #   soc_safety <dbl>, pop_below14_2018 <dbl>, polity <dbl>, gini <dbl>,
-    ## #   elf_epr <dbl>, rq_polarization <dbl>, count_powerless <dbl>,
-    ## #   share_powerless <dbl>, media_critical <dbl>, journal_harass <dbl>,
-    ## #   health_equality <dbl>, property_rights <dbl>, transparent_law <dbl>,
-    ## #   bureaucracy_corrupt <dbl>, polar_rile <dbl>, trust_people <dbl>,
-    ## #   trust_gov <dbl>, electoral_pop <dbl>, federal_ind <dbl>, checks_veto <dbl>,
-    ## #   polariz_veto <dbl>, dist_senate <dbl>, dist_presid <dbl>, dist_parlm <dbl>,
-    ## #   dist_anyelec <dbl>, elect_pressure <dbl>, pos_gov_lr <dbl>,
-    ## #   woman_leader <dbl>, infections_mers <dbl>, infections_sars <dbl>,
-    ## #   infections_ebola <dbl>, infection <dbl>, med_age_2013 <dbl>,
-    ## #   vdem_libdem <dbl>, al_etfra <dbl>, al_religfra <dbl>, fe_etfra <dbl>,
-    ## #   vdem_mecorrpt <dbl>, share_health_ins <dbl>, pandemic_prep <dbl>,
-    ## #   pop_den_2018 <dbl>, life_exp_2017 <dbl>, resp_disease_prev <dbl>,
-    ## #   detect_index <dbl>, doctors_pc <dbl>, hosp_beds_pc <dbl>,
-    ## #   literacy_rate <dbl>, healthcare_qual <dbl>, acc_sanitation <dbl>,
-    ## #   health_exp_pc <dbl>, hdi <dbl>, health_index <dbl>, respond_index <dbl>,
-    ## #   state_fragility <dbl>, pr <dbl>, share_older <dbl>, pop_tot_log <dbl>,
-    ## #   pop_density_log <dbl>, distancing_bin <lgl>, lockdown_bin <lgl>,
-    ## #   lockdown_n <lgl>, distancing_n <lgl>, days_rel_lockdown <lgl>,
-    ## #   days_rel_distancing <lgl>, retail <lgl>, grocery <lgl>, parks <lgl>,
-    ## #   transit <lgl>, work <lgl>, residential <lgl>, mobility_index <dbl>,
-    ## #   stringency <lgl>, C1_School.closing <lgl>, C2_Workplace.closing <lgl>,
-    ## #   C3_Cancel.public.events <lgl>, …
+    ##    X1 geoid2       date month day year elapsed   date_rep cases deaths country
+    ## 1 124    MEX 2020-11-22    11  21 2020     326 2020-11-22  6719    550  Mexico
+    ##   population_2019 continent
+    ## 1       127575529   America
+    ##   Cumulative_number_for_14_days_of_COVID.19_cases_per_100000 cases_cum
+    ## 1                                                     55.457   1032688
+    ##   deaths_cum deaths_cum_log deaths_cum_l7 deaths_cum_g7
+    ## 1     101373         11.527         98259         0.033
+    ##                      region gov_effect  trade ineq gdp_pc pop_tot older_m
+    ## 1 Latin America & Caribbean     -0.153 80.448 36.4 18.134 126.191 4101778
+    ##   older_f air_travel         fdi pop_density  urban migration_share   oil
+    ## 1 5013893     17.983 37495592533      64.915 40.709           0.939 1.724
+    ##   soc_insur_cov soc_contrib soc_safety pop_below14_2018 polity   gini elf_epr
+    ## 1        41.889      11.483     32.526           26.557      8 45.186   0.336
+    ##   rq_polarization count_powerless share_powerless media_critical journal_harass
+    ## 1            0.59               2           0.192          1.622          0.191
+    ##   health_equality property_rights transparent_law bureaucracy_corrupt
+    ## 1          -0.805           0.872          -0.272               0.451
+    ##   polar_rile trust_people trust_gov electoral_pop federal_ind checks_veto
+    ## 1     15.717        19.01    16.255             1       0.763           4
+    ##   polariz_veto dist_senate dist_presid dist_parlm dist_anyelec elect_pressure
+    ## 1            1        1603        1573        507          507          0.002
+    ##   pos_gov_lr woman_leader infections_mers infections_sars infections_ebola
+    ## 1         NA            0              NA              NA               NA
+    ##   infection med_age_2013 vdem_libdem al_etfra al_religfra fe_etfra
+    ## 1         0           27       0.487    0.542        0.18    0.542
+    ##   vdem_mecorrpt share_health_ins pandemic_prep pop_den_2018 life_exp_2017
+    ## 1         2.689             85.6          57.6       64.915        74.947
+    ##   resp_disease_prev detect_index doctors_pc hosp_beds_pc literacy_rate
+    ## 1             3.653         71.2      223.1          150          94.9
+    ##   healthcare_qual acc_sanitation health_exp_pc hdi health_index respond_index
+    ## 1            66.3           89.2           507 0.8         46.9          50.8
+    ##   state_fragility pr share_older pop_tot_log pop_density_log distancing_bin
+    ## 1               5  1       7.224       4.838           4.173             NA
+    ##   lockdown_bin lockdown_n distancing_n days_rel_lockdown days_rel_distancing
+    ## 1           NA         NA           NA                NA                  NA
+    ##   retail grocery parks transit work residential mobility_index stringency
+    ## 1     NA      NA    NA      NA   NA          NA            -48         NA
+    ##   C1_School.closing C2_Workplace.closing C3_Cancel.public.events
+    ## 1                NA                   NA                      NA
+    ##   C4_Restrictions.on.gatherings C5_Close.public.transport
+    ## 1                            NA                        NA
+    ##   C6_Stay.at.home.requirements C7_Restrictions.on.internal.movement
+    ## 1                           NA                                   NA
+    ##   C8_International.travel.controls H1_Public.information.campaigns temp_mean
+    ## 1                               NA                              NA      24.4
+    ##    precip excess_deaths_weekly excess_deaths_source excess_deaths_last_obs
+    ## 1 130.633                   NA                   NA                     NA
+    ##   excess_deaths_cum excess_deaths_cum_log deaths_cum_per_million
+    ## 1                NA                    NA                803.331
+    ##   deaths_cum_per_million_log excess_deaths_cum_per_million
+    ## 1                       6.69                            NA
+    ##   excess_deaths_cum_per_million_log forcats..fct_explicit_na.geoid2.
+    ## 1                                NA                              MEX
+    ##   relative_start elapsed_rel relative_start_d elapsed_rel_d CumulativeCases
+    ## 1             58         268               87           239        8094.719
 
 ``` r
 new_covid_america_without_outlier <- new_covid_america %>% filter (deaths_cum < 75000)
+
+new_covid_america_without_outlier <- transform (new_covid_america_without_outlier,
+                                                CumulativeCases = (cases_cum)/((population_2019)/1000000)
+                                                                   )  
+
 new_covid_america_without_outlier %>%
   ggplot(
     mapping = aes(x= deaths_cum,
-                  y = cases_cum)) +
+                  y = CumulativeCases)) +
   theme_bw()+
   
-  labs(y="Cumulative cases", x="Cumulative deaths")+
+  labs(y="Cumulative cases per Million", x="Cumulative deaths")+
   ggtitle("Cumulative cases vs Cumulative deaths in the Americas, excluding outliers")+
   
   geom_point()+
@@ -373,9 +405,11 @@ new_covid_america_without_outlier <- transform(new_covid_america_without_outlier
                               )
 
 new_covid_america_without_outlier <- transform(new_covid_america_without_outlier, 
-                              mortality = (deaths_cum / cases_cum)*100
+                              mortality = (deaths_cum / cases_cum)
                               )
-
+new_covid_america_without_outlier <- transform(new_covid_america_without_outlier, 
+                              Mortality = (mortality)/((population_2019)/1000000)
+                              )
 
 
 new_covid_america <- transform(new_covid_america, 
@@ -387,7 +421,11 @@ new_covid_america <- transform(new_covid_america,
                               )
 
 new_covid_america <- transform(new_covid_america, 
-                              mortality = (deaths_cum / cases_cum)*100
+                              mortality = (deaths_cum / cases_cum)
+                              )
+
+new_covid_america <- transform(new_covid_america, 
+                              Mortality = (mortality)/((population_2019)/1000000)
                               )
 ```
 
@@ -405,7 +443,7 @@ variables.
   new_covid_america_without_outlier %>%
   ggplot(
     mapping = aes(x=older_share,
-                  y = mortality)) +
+                  y = Mortality)) +
   theme_bw()+
   
   labs(y="Mortality", x="Share of population aged 65+")+
@@ -455,7 +493,7 @@ inconclusive.
   new_covid_america_without_outlier %>%
   ggplot(
     mapping = aes(x=older_share,
-                  y = mortality,
+                  y = Mortality,
                   color = region,
                   fill = region)) +
  theme_bw()+
@@ -534,8 +572,8 @@ europe
     ## 1                            NA                                NA
     ##   forcats..fct_explicit_na.geoid2. relative_start elapsed_rel relative_start_d
     ## 1                              GRL             88         238               NA
-    ##   elapsed_rel_d pop_older older_share mortality
-    ## 1            NA        NA          NA         0
+    ##   elapsed_rel_d CumulativeCases pop_older older_share mortality Mortality
+    ## 1            NA        317.6844        NA          NA         0         0
 
 ``` r
 north_america <- new_covid_america %>% filter (region == "North America")
@@ -623,9 +661,9 @@ north_america
     ##   forcats..fct_explicit_na.geoid2. relative_start elapsed_rel relative_start_d
     ## 1                              BMU             86         240               NA
     ## 2                              CAN             55         271               79
-    ##   elapsed_rel_d pop_older older_share mortality
-    ## 1            NA        NA          NA  3.964758
-    ## 2           247   6385926    17.06963  3.501877
+    ##   elapsed_rel_d CumulativeCases pop_older older_share  mortality    Mortality
+    ## 1            NA        3631.535        NA          NA 0.03964758 0.6342800456
+    ## 2           247        8706.281   6385926    17.06963 0.03501877 0.0009360546
 
 It makes sense to further inspect mortality rates, when dividing the
 dataset in three tiers:
@@ -649,64 +687,58 @@ first_new_covid_america_without_outlier <- new_covid_america_without_outlier %>%
 second_new_covid_america_without_outlier <- new_covid_america_without_outlier %>% filter (older_share >= 10 & older_share <= 15)
 third_new_covid_america_without_outlier <- new_covid_america_without_outlier %>% filter (older_share > 15)
 
-first_new_covid_america_without_outlier %>%
+sp1 <- first_new_covid_america_without_outlier %>%
   ggplot(
     mapping = aes(x=older_share,
-                  y = mortality,
+                  y = Mortality,
                   color = region,
                   fill = region)) +
  theme_bw()+
   
   labs(y="Mortality", x="Share of population aged 65+")+
-  ggtitle("Tier 1: Proportion of population aged 65+ vs Mortality; categorized by region")+
+  ggtitle("Tier 1")+
   
   geom_point()+
   stat_smooth(method="lm")
+
+
+sp2 <- second_new_covid_america_without_outlier %>%
+  ggplot(
+    mapping = aes(x=older_share,
+                  y = Mortality,
+                  color = region,
+                  fill = region)) +
+ theme_bw()+
+  
+  labs(y="Mortality", x="Share of population aged 65+")+
+  ggtitle("Tier 2")+
+  
+  geom_point()+
+  stat_smooth(method="lm")
+
+sp3 <- third_new_covid_america_without_outlier %>%
+  ggplot(
+    mapping = aes(x=older_share,
+                  y = Mortality,
+                  color = region,
+                  fill = region)) +
+ theme_bw()+
+  
+  labs(y="Mortality", x="Share of population aged 65+")+
+  ggtitle("Tier 3")+
+  
+  geom_point()+
+  stat_smooth(method="lm")
+
+
+grid.arrange(sp1, sp2, sp3, ncol=1)
 ```
 
+    ## `geom_smooth()` using formula 'y ~ x'
+    ## `geom_smooth()` using formula 'y ~ x'
     ## `geom_smooth()` using formula 'y ~ x'
 
 ![](finalproject_files/figure-gfm/older_share%20categorized%20in%20tiers-1.png)<!-- -->
-
-``` r
-second_new_covid_america_without_outlier %>%
-  ggplot(
-    mapping = aes(x=older_share,
-                  y = mortality,
-                  color = region,
-                  fill = region)) +
- theme_bw()+
-  
-  labs(y="Mortality", x="Share of population aged 65+")+
-  ggtitle("Tier 2: Proportion of population aged 65+ vs Mortality; categorized by region")+
-  
-  geom_point()+
-  stat_smooth(method="lm")
-```
-
-    ## `geom_smooth()` using formula 'y ~ x'
-
-![](finalproject_files/figure-gfm/older_share%20categorized%20in%20tiers-2.png)<!-- -->
-
-``` r
-third_new_covid_america_without_outlier %>%
-  ggplot(
-    mapping = aes(x=older_share,
-                  y = mortality,
-                  color = region,
-                  fill = region)) +
- theme_bw()+
-  
-  labs(y="Mortality", x="Share of population aged 65+")+
-  ggtitle("Tier 3: Proportion of population aged 65+ vs Mortality; categorized by region")+
-  
-  geom_point()+
-  stat_smooth(method="lm")
-```
-
-    ## `geom_smooth()` using formula 'y ~ x'
-
-![](finalproject_files/figure-gfm/older_share%20categorized%20in%20tiers-3.png)<!-- -->
 
 A problem with the point plots is that many countries have similar
 values, thus the points lie on top of each other, masking the magnitude
@@ -773,7 +805,7 @@ resulted in an almost horizontal plot with the slope of around 0.
 ``` r
   new_covid_america_without_outlier %>%
   ggplot(
-    mapping = aes(x=mortality,
+    mapping = aes(x=Mortality,
                   color = region,
                   fill = region)) +
  theme_bw()+
@@ -849,8 +881,8 @@ older
     ## 1                            NA                                NA
     ##   forcats..fct_explicit_na.geoid2. relative_start elapsed_rel relative_start_d
     ## 1                              PRI             87         239               92
-    ##   elapsed_rel_d pop_older older_share mortality
-    ## 1           234    596752    20.34333  1.217209
+    ##   elapsed_rel_d CumulativeCases pop_older older_share  mortality   Mortality
+    ## 1           234        28342.84    596752    20.34333 0.01217209 0.004149477
 
 ``` r
 north_america
@@ -937,123 +969,153 @@ north_america
     ##   forcats..fct_explicit_na.geoid2. relative_start elapsed_rel relative_start_d
     ## 1                              BMU             86         240               NA
     ## 2                              CAN             55         271               79
-    ##   elapsed_rel_d pop_older older_share mortality
-    ## 1            NA        NA          NA  3.964758
-    ## 2           247   6385926    17.06963  3.501877
+    ##   elapsed_rel_d CumulativeCases pop_older older_share  mortality    Mortality
+    ## 1            NA        3631.535        NA          NA 0.03964758 0.6342800456
+    ## 2           247        8706.281   6385926    17.06963 0.03501877 0.0009360546
 
 ``` r
 deadly <-new_covid_america_without_outlier %>% filter (mortality > 6)
 deadly
 ```
 
-    ##   X1 geoid2       date month day year elapsed   date_rep cases deaths country
-    ## 1 27    BOL 2020-11-22    11  21 2020     326 2020-11-22   167     15 Bolivia
-    ## 2 57    ECU 2020-11-22    11  21 2020     326 2020-11-22  1036     44 Ecuador
-    ##   population_2019 continent
-    ## 1        11513102   America
-    ## 2        17373657   America
-    ##   Cumulative_number_for_14_days_of_COVID.19_cases_per_100000 cases_cum
-    ## 1                                                     12.985    143922
-    ## 2                                                     65.559    184876
-    ##   deaths_cum deaths_cum_log deaths_cum_l7 deaths_cum_g7
-    ## 1       8904          9.094          8841         0.006
-    ## 2      13139          9.483         12997         0.009
-    ##                      region gov_effect  trade ineq gdp_pc pop_tot older_m
-    ## 1 Latin America & Caribbean     -0.322 57.110 30.4  6.986  11.353  377907
-    ## 2 Latin America & Caribbean     -0.261 45.867 34.4 10.412  17.084  565818
-    ##   older_f air_travel        fdi pop_density  urban migration_share   oil
-    ## 1  438604     15.232  255082886      10.480 41.336           1.333 1.320
-    ## 2  656958     15.495 1410435145      68.789 27.635           2.400 4.957
-    ##   soc_insur_cov soc_contrib soc_safety pop_below14_2018 polity   gini elf_epr
-    ## 1         7.771          NA      76.88           31.074      7 43.587   0.672
-    ## 2        10.930          NA      67.05           28.029      5 42.737   0.327
-    ##   rq_polarization count_powerless share_powerless media_critical journal_harass
-    ## 1           0.853               1            0.03          0.269          0.082
-    ## 2           0.560               3            0.19          0.518          1.128
-    ##   health_equality property_rights transparent_law bureaucracy_corrupt
-    ## 1          -0.709           0.648           0.642               0.465
-    ## 2           0.649           0.837           1.075               0.365
-    ##   polar_rile trust_people trust_gov electoral_pop federal_ind checks_veto
-    ## 1         NA       15.713    33.474             0       0.061           2
-    ## 2         NA       14.154    26.163             0      -0.375           2
-    ##   polariz_veto dist_senate dist_presid dist_parlm dist_anyelec elect_pressure
-    ## 1            0          53          53         53           53          0.019
-    ## 2            0          NA         345        345          345          0.003
-    ##   pos_gov_lr woman_leader infections_mers infections_sars infections_ebola
-    ## 1         NA            1              NA              NA               NA
-    ## 2         NA            0              NA              NA               NA
-    ##   infection med_age_2013 vdem_libdem al_etfra al_religfra fe_etfra
-    ## 1         0         22.4       0.420    0.740       0.208    0.743
-    ## 2         0         26.1       0.295    0.655       0.142    0.655
-    ##   vdem_mecorrpt share_health_ins pandemic_prep pop_den_2018 life_exp_2017
-    ## 1         3.180             42.7          35.8       10.480        70.945
-    ## 2         2.675             22.8          50.1       68.789        76.584
-    ##   resp_disease_prev detect_index doctors_pc hosp_beds_pc literacy_rate
-    ## 1             3.445         33.1       47.3          110          92.5
-    ## 2             3.772         71.2      166.5          150          94.4
-    ##   healthcare_qual acc_sanitation health_exp_pc hdi health_index respond_index
-    ## 1            48.8           52.6           326 0.7         14.9          29.2
-    ## 2            62.2           86.1           483 0.8         35.2          39.5
-    ##   state_fragility pr share_older pop_tot_log pop_density_log distancing_bin
-    ## 1              11  1       7.192       2.429           2.349             NA
-    ## 2               7  1       7.157       2.838           4.231             NA
-    ##   lockdown_bin lockdown_n distancing_n days_rel_lockdown days_rel_distancing
-    ## 1           NA         NA           NA                NA                  NA
-    ## 2           NA         NA           NA                NA                  NA
-    ##   retail grocery parks transit work residential mobility_index stringency
-    ## 1     NA      NA    NA      NA   NA          NA          -72.2         NA
-    ## 2     NA      NA    NA      NA   NA          NA          -63.0         NA
-    ##   C1_School.closing C2_Workplace.closing C3_Cancel.public.events
-    ## 1                NA                   NA                      NA
-    ## 2                NA                   NA                      NA
-    ##   C4_Restrictions.on.gatherings C5_Close.public.transport
-    ## 1                            NA                        NA
-    ## 2                            NA                        NA
-    ##   C6_Stay.at.home.requirements C7_Restrictions.on.internal.movement
-    ## 1                           NA                                   NA
-    ## 2                           NA                                   NA
-    ##   C8_International.travel.controls H1_Public.information.campaigns temp_mean
-    ## 1                               NA                              NA    21.433
-    ## 2                               NA                              NA    22.067
-    ##    precip excess_deaths_weekly excess_deaths_source excess_deaths_last_obs
-    ## 1  62.633                   NA                   NA                     NA
-    ## 2 101.867                   NA                   NA                     NA
-    ##   excess_deaths_cum excess_deaths_cum_log deaths_cum_per_million
-    ## 1                NA                    NA                784.276
-    ## 2                NA                    NA                769.066
-    ##   deaths_cum_per_million_log excess_deaths_cum_per_million
-    ## 1                      6.666                            NA
-    ## 2                      6.646                            NA
-    ##   excess_deaths_cum_per_million_log forcats..fct_explicit_na.geoid2.
-    ## 1                                NA                              BOL
-    ## 2                                NA                              ECU
-    ##   relative_start elapsed_rel relative_start_d elapsed_rel_d pop_older
-    ## 1             73         253               94           232    816511
-    ## 2             64         262               82           244   1222776
-    ##   older_share mortality
-    ## 1    7.092016  6.186684
-    ## 2    7.038104  7.106926
-
-Although this is not the main focus of the research paper, we wanted to
-explore a possible confounding variable, since we could not find a
-strong relationship between our chosen variables. Reports of Covid-19
-case explosions in migrant communities beg the question whether there is
-a correlation between mortality rates and the migrant population as a
-share of the total population. When it comes to the Americas, the most
-affected are Venezuelan migrants. “As of 30 October 2020, more than
-136,000 Venezuelan migrants and refugees had returned to Venezuela from
-other countries in the region (IOM and UN OCHA, 2020). At its peak, 600
-Venezuelans returned from Colombia daily and an average of 88
-Venezuelans returned from Brazil daily via the border at Pacaraima
-(Coordination Platform for Refugees and Migrants from Venezuela, 2020).”
-(Migration Data Portal)
-
-The hypothesis would suggest that countries with a higher share of their
-population consisting of migrants would have respectively higher
-Covid-19 mortality rates. Superimposing the two density plots onto each
-other, we see a strong correlation in North America and a weaker (but
-not non-existing) correlation in Latin America & Caribbean. This could
-be explored in further research papers.
+    ##   [1] X1                                                        
+    ##   [2] geoid2                                                    
+    ##   [3] date                                                      
+    ##   [4] month                                                     
+    ##   [5] day                                                       
+    ##   [6] year                                                      
+    ##   [7] elapsed                                                   
+    ##   [8] date_rep                                                  
+    ##   [9] cases                                                     
+    ##  [10] deaths                                                    
+    ##  [11] country                                                   
+    ##  [12] population_2019                                           
+    ##  [13] continent                                                 
+    ##  [14] Cumulative_number_for_14_days_of_COVID.19_cases_per_100000
+    ##  [15] cases_cum                                                 
+    ##  [16] deaths_cum                                                
+    ##  [17] deaths_cum_log                                            
+    ##  [18] deaths_cum_l7                                             
+    ##  [19] deaths_cum_g7                                             
+    ##  [20] region                                                    
+    ##  [21] gov_effect                                                
+    ##  [22] trade                                                     
+    ##  [23] ineq                                                      
+    ##  [24] gdp_pc                                                    
+    ##  [25] pop_tot                                                   
+    ##  [26] older_m                                                   
+    ##  [27] older_f                                                   
+    ##  [28] air_travel                                                
+    ##  [29] fdi                                                       
+    ##  [30] pop_density                                               
+    ##  [31] urban                                                     
+    ##  [32] migration_share                                           
+    ##  [33] oil                                                       
+    ##  [34] soc_insur_cov                                             
+    ##  [35] soc_contrib                                               
+    ##  [36] soc_safety                                                
+    ##  [37] pop_below14_2018                                          
+    ##  [38] polity                                                    
+    ##  [39] gini                                                      
+    ##  [40] elf_epr                                                   
+    ##  [41] rq_polarization                                           
+    ##  [42] count_powerless                                           
+    ##  [43] share_powerless                                           
+    ##  [44] media_critical                                            
+    ##  [45] journal_harass                                            
+    ##  [46] health_equality                                           
+    ##  [47] property_rights                                           
+    ##  [48] transparent_law                                           
+    ##  [49] bureaucracy_corrupt                                       
+    ##  [50] polar_rile                                                
+    ##  [51] trust_people                                              
+    ##  [52] trust_gov                                                 
+    ##  [53] electoral_pop                                             
+    ##  [54] federal_ind                                               
+    ##  [55] checks_veto                                               
+    ##  [56] polariz_veto                                              
+    ##  [57] dist_senate                                               
+    ##  [58] dist_presid                                               
+    ##  [59] dist_parlm                                                
+    ##  [60] dist_anyelec                                              
+    ##  [61] elect_pressure                                            
+    ##  [62] pos_gov_lr                                                
+    ##  [63] woman_leader                                              
+    ##  [64] infections_mers                                           
+    ##  [65] infections_sars                                           
+    ##  [66] infections_ebola                                          
+    ##  [67] infection                                                 
+    ##  [68] med_age_2013                                              
+    ##  [69] vdem_libdem                                               
+    ##  [70] al_etfra                                                  
+    ##  [71] al_religfra                                               
+    ##  [72] fe_etfra                                                  
+    ##  [73] vdem_mecorrpt                                             
+    ##  [74] share_health_ins                                          
+    ##  [75] pandemic_prep                                             
+    ##  [76] pop_den_2018                                              
+    ##  [77] life_exp_2017                                             
+    ##  [78] resp_disease_prev                                         
+    ##  [79] detect_index                                              
+    ##  [80] doctors_pc                                                
+    ##  [81] hosp_beds_pc                                              
+    ##  [82] literacy_rate                                             
+    ##  [83] healthcare_qual                                           
+    ##  [84] acc_sanitation                                            
+    ##  [85] health_exp_pc                                             
+    ##  [86] hdi                                                       
+    ##  [87] health_index                                              
+    ##  [88] respond_index                                             
+    ##  [89] state_fragility                                           
+    ##  [90] pr                                                        
+    ##  [91] share_older                                               
+    ##  [92] pop_tot_log                                               
+    ##  [93] pop_density_log                                           
+    ##  [94] distancing_bin                                            
+    ##  [95] lockdown_bin                                              
+    ##  [96] lockdown_n                                                
+    ##  [97] distancing_n                                              
+    ##  [98] days_rel_lockdown                                         
+    ##  [99] days_rel_distancing                                       
+    ## [100] retail                                                    
+    ## [101] grocery                                                   
+    ## [102] parks                                                     
+    ## [103] transit                                                   
+    ## [104] work                                                      
+    ## [105] residential                                               
+    ## [106] mobility_index                                            
+    ## [107] stringency                                                
+    ## [108] C1_School.closing                                         
+    ## [109] C2_Workplace.closing                                      
+    ## [110] C3_Cancel.public.events                                   
+    ## [111] C4_Restrictions.on.gatherings                             
+    ## [112] C5_Close.public.transport                                 
+    ## [113] C6_Stay.at.home.requirements                              
+    ## [114] C7_Restrictions.on.internal.movement                      
+    ## [115] C8_International.travel.controls                          
+    ## [116] H1_Public.information.campaigns                           
+    ## [117] temp_mean                                                 
+    ## [118] precip                                                    
+    ## [119] excess_deaths_weekly                                      
+    ## [120] excess_deaths_source                                      
+    ## [121] excess_deaths_last_obs                                    
+    ## [122] excess_deaths_cum                                         
+    ## [123] excess_deaths_cum_log                                     
+    ## [124] deaths_cum_per_million                                    
+    ## [125] deaths_cum_per_million_log                                
+    ## [126] excess_deaths_cum_per_million                             
+    ## [127] excess_deaths_cum_per_million_log                         
+    ## [128] forcats..fct_explicit_na.geoid2.                          
+    ## [129] relative_start                                            
+    ## [130] elapsed_rel                                               
+    ## [131] relative_start_d                                          
+    ## [132] elapsed_rel_d                                             
+    ## [133] CumulativeCases                                           
+    ## [134] pop_older                                                 
+    ## [135] older_share                                               
+    ## [136] mortality                                                 
+    ## [137] Mortality                                                 
+    ## <0 rows> (or 0-length row.names)
 
 ``` r
   new_covid_america_without_outlier %>%
@@ -1076,7 +1138,126 @@ be explored in further research papers.
     ## Warning in max(ids, na.rm = TRUE): no non-missing arguments to max; returning -
     ## Inf
 
+![](finalproject_files/figure-gfm/older_share%20mortality%20migration_share%20density%20plot-3.png)<!-- -->
+
+Although this is not the main focus of the research paper, we wanted to
+explore a possible confounding variable, since we could not find a
+strong relationship between our chosen variables. Reports of Covid-19
+case explosions in migrant communities beg the question whether there is
+a correlation between mortality rates and the migrant population as a
+share of the total population. When it comes to the Americas, the most
+affected are Venezuelan migrants. “As of 30 October 2020, more than
+136,000 Venezuelan migrants and refugees had returned to Venezuela from
+other countries in the region (IOM and UN OCHA, 2020). At its peak, 600
+Venezuelans returned from Colombia daily and an average of 88
+Venezuelans returned from Brazil daily via the border at Pacaraima
+(Coordination Platform for Refugees and Migrants from Venezuela, 2020).”
+(Migration Data Portal)
+
+The hypothesis would suggest that countries with a higher share of their
+population consisting of migrants would have respectively higher
+Covid-19 mortality rates. Superimposing the two density plots onto each
+other, we see a strong correlation in North America and a weaker (but
+not non-existing) correlation in Latin America & Caribbean. Creating
+graphs of both Mortality per million vs Population density and Mortality
+per million vs Migrant share of the population shows to be some of the
+strongest correlation revealed in this research paper, when it comes to
+the Ameriacs. This could be explored in further research papers.
+
+``` r
+southamerica <- new_covid_america %>% filter (region == "Latin America & Caribbean")
+northamerica <- new_covid_america %>% filter (region == "North America")
+
+sp4 <- southamerica %>%
+  ggplot(
+    mapping = aes(x = pop_density,
+                  y = Mortality,
+                  color = region,
+                  fill = region)) +
+ theme_bw()+
+  
+  labs(y="Mortality", x="Population density")+
+  ggtitle("Latin America & Caribbean")+
+  
+  geom_point()+
+  stat_smooth(method="lm")
+
+sp5 <- northamerica %>%
+  ggplot(
+    mapping = aes(x = pop_density,
+                  y = Mortality,
+                  color = region,
+                  fill = region)) +
+ theme_bw()+
+  
+  labs(y="Mortality", x="Population density")+
+  ggtitle("North America")+
+  
+  geom_point()+
+  stat_smooth(method="lm")
+
+
+  grid.arrange(sp4, sp5, ncol=1)
+```
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+    ## Warning: Removed 2 rows containing non-finite values (stat_smooth).
+
+    ## Warning: Removed 2 rows containing missing values (geom_point).
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+    ## Warning in qt((1 - level)/2, df): NaNs produced
+
+    ## Warning in max(ids, na.rm = TRUE): no non-missing arguments to max; returning -
+    ## Inf
+
 ![](finalproject_files/figure-gfm/older_share%20migration_share-1.png)<!-- -->
+
+``` r
+  sp6 <- northamerica %>%
+  ggplot(
+    mapping = aes(x = migration_share,
+                  y = Mortality,
+                  color = region,
+                  fill = region)) +
+ theme_bw()+
+  
+  labs(y="Mortality", x="Migration share")+
+  ggtitle("North America")+
+  
+  geom_point()+
+  stat_smooth(method="lm")
+  
+    sp7 <- southamerica %>%
+  ggplot(
+    mapping = aes(x = migration_share,
+                  y = Mortality,
+                  color = region,
+                  fill = region)) +
+ theme_bw()+
+  
+  labs(y="Mortality", x="Migration share")+
+  ggtitle("South America")+
+  
+  geom_point()+
+  stat_smooth(method="lm")
+
+    
+  grid.arrange(sp6, sp7, ncol=1)
+```
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+    ## Warning in qt((1 - level)/2, df): NaNs produced
+    
+    ## Warning in qt((1 - level)/2, df): no non-missing arguments to max; returning -
+    ## Inf
+
+    ## `geom_smooth()` using formula 'y ~ x'
+
+![](finalproject_files/figure-gfm/older_share%20migration_share-2.png)<!-- -->
 
 ``` r
 #install.packages(c("coda","mvtnorm","devtools","loo","dagitty","remotes"))
@@ -1109,7 +1290,7 @@ sd(new_covid_america$cases_cum, na.rm = TRUE)
     ## [1] 330865.1
 
 ``` r
-CumulativeCases <- new_covid_america$cases_cum
+CumulativeCases <- new_covid_america$CumulativeCases
   hist(CumulativeCases)
 ```
 
@@ -1138,22 +1319,22 @@ balanced distribution between 2% mortality and 4% mortality.
 mean(new_covid_america$mortality)
 ```
 
-    ## [1] 2.163083
+    ## [1] 0.02163083
 
 ``` r
 median(new_covid_america$mortality)
 ```
 
-    ## [1] 2.048019
+    ## [1] 0.02048019
 
 ``` r
 sd(new_covid_america$mortality)
 ```
 
-    ## [1] 1.892234
+    ## [1] 0.01892234
 
 ``` r
-Mortality <- new_covid_america$mortality
+Mortality <- new_covid_america$Mortality
   hist(Mortality)
 ```
 
@@ -1169,8 +1350,8 @@ Mortality <- new_covid_america$mortality
 summary(new_covid_america$mortality)
 ```
 
-    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##  0.0000  0.9595  2.0480  2.1631  2.7851  9.8164
+    ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+    ## 0.000000 0.009595 0.020480 0.021631 0.027851 0.098164
 
 When looking at the share of migrants, we again see a large difference
 between the mean and the median values, suggesting there are a few
