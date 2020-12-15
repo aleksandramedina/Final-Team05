@@ -2276,15 +2276,6 @@ belonging to one continent. A way that that method can be utilized is:
 classifying the countries by area - how much of the country belongs more
 to one continent or another.
 
-Source:
-<https://ec.europa.eu/eurostat/cache/infographs/elderly/index.html#>:\~:text=In%202016%2C%2019.2%25%20of%20the,lowest%20in%20Ireland%20(13.2%25).
-
-Source:
-<https://ec.europa.eu/eurostat/statistics-explained/index.php/Migration_and_migrant_population_statistics#>:\~:text=2.4%20million%20immigrants%20entered%20the,non%2DEU%2D27%20citizens.
-
-Source:
-<https://en.wikipedia.org/wiki/Intra-African_migration#>:\~:text=Africa%20hosts%20the%204th%20largest,people%20moved%20between%20African%20countries.
-
 -----
 
 ``` r
@@ -2906,3 +2897,80 @@ ggplot(data = covid_asia_without_outlier, mapping = aes(x = (deaths_cum/cases_cu
     ## `stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
 
 ![](finalproject_files/figure-gfm/unnamed-chunk-39-1.png)<!-- -->
+
+-----
+
+**Conclusion**
+
+During our individual analysis, we started to notice indications that
+our hypothesis might be on shaking grounds based on the results we were
+getting. Nevertheless, we decided to go further with our exploration of
+variables. After analyzing all the countries and continents with the
+data that was available in the data set, and by using various types of
+plots to show the relationships between the chosen variables, we
+conclude that the COVID-19 mortality rate does seem to be affected by
+the proportion of the population aged 65 or older, population densities
+and migrant share of population of countries. That was surprising to us
+because we were naturally inclined to create such a hypothesis, only to
+see it disproved by data. Thus, we couldn’t really reach a conclusion
+where we could say whether this impact was positively or negatively
+related because some countries (due to various other factors) showed
+positive correlation while others didn’t. Population densities, however,
+had a positive correlation in most countries, if not all.
+
+The first problem we noticed started at the beginning of our research
+project, because we wanted to measure the effect of lockdown measures on
+the rate of mortality. The data for lockdown measures proved
+inconclusive, which pressured us to pivot our research question to the
+effect of the population aged 65 and older and their effect on COVID-19
+mortality. But, the incompleteness of data did not stop with that one
+variable set called “lockdown measures”. Many countries in all of the
+continents for which data was gathered by the researchers did not have
+information about the variables we chose to support our analysis. There
+were no cumulative cases and deaths for countries in Europe, Africa,
+Asia, and the Americas which created difficulties while gathering the
+data and putting it into context, which ended with a so called “NA”
+result. The next problem we encountered was that some countries, which
+were at a crossroad between two, or even three continents (meaning that
+there are no distinct borders and those countries belong to those
+continents) were put as belonging in one continent and then another.
+This move by the researchers created additional results to our scatter
+and density plots which made it difficult for us to distinguish true
+data from essentially what was, “double data”. The third bigger problem
+we were faced with was that some countries were classified as regions
+while others were continents, for example Greenland was classified as
+“Europe & Central Asia” as a region, but “America” as a continent.
+Other problems were smaller than these ones, and we were able to resolve
+them very quickly.
+
+Even though the results we got were not what we expected, we are far
+from discouraged. On the contrary, we are now more intrigued by how
+different variables react with one another and form a relationship. That
+is the beauty of data science - sometimes we do not get the results we
+are hoping for, but that gives us even more power to find the missing
+pieces of the puzzles and work with the results we have gotten. Who
+knows, we might even realize that a small error was disabling us from
+seeing what is right in front of our eyes.
+
+-----
+
+**References**
+
+Source:
+<https://ec.europa.eu/eurostat/cache/infographs/elderly/index.html#>:\~:text=In%202016%2C%2019.2%25%20of%20the,lowest%20in%20Ireland%20(13.2%25).
+
+Source:
+<https://ec.europa.eu/eurostat/statistics-explained/index.php/Migration_and_migrant_population_statistics#>:\~:text=2.4%20million%20immigrants%20entered%20the,non%2DEU%2D27%20citizens.
+
+Source:
+<https://en.wikipedia.org/wiki/Intra-African_migration#>:\~:text=Africa%20hosts%20the%204th%20largest,people%20moved%20between%20African%20countries.
+
+Source: <https://www.nejm.org/doi/full/10.1056/NEJMp2006761>
+
+Source:
+<https://www.cdc.gov/coronavirus/2019-ncov/need-extra-precautions/older-adults.html>
+
+Source:
+<https://www.who.int/news-room/feature-stories/detail/who-delivers-advice-and-support-for-older-people-during-covid-19#>:\~:text=Although%20all%20age%20groups%20are,potential%20underlying%20health%20conditions.
+
+-----
