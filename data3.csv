@@ -1,0 +1,96 @@
+country,pop_density,cases_cum,deaths_cum,old_perc,continent,region
+Albania,104.612,44436,936,14.20263062,Europe,Europe & Central Asia
+Armenia,103.68,144066,2393,11.48367,Europe,Europe & Central Asia
+Austria,107.128,305688,3907,19.07561,Europe,Europe & Central Asia
+Azerbaijan,120.234,154152,1713,6.44638912,Europe,Europe & Central Asia
+Belgium,377.38,594436,17507,19.00656607,Europe,Europe & Central Asia
+Bulgaria,64.711,168165,5156,21.25296727,Europe,Europe & Central Asia
+Bosnia & Herzegovina,64.92,96021,3081,17.20115,Europe,Europe & Central Asia
+Belarus,46.72,150602,1222,15.20084,Europe,Europe & Central Asia
+Switzerland,215.465,357121,5099,18.83799606,Europe,Europe & Central Asia
+Cyprus,128.708,13286,68,14.04826565,Europe,Europe & Central Asia
+Czechia,137.658,556927,9136,19.80074484,Europe,Europe & Central Asia
+Germany,237.308,1218524,19932,21.56299232,Europe,Europe & Central Asia
+Denmark,137.977,94799,901,19.96525913,Europe,Europe & Central Asia
+Estonia,30.411,15510,137,19.99180778,Europe,Europe & Central Asia
+Finland,18.149,28242,425,22.14064,Europe,Europe & Central Asia
+France,122.299,2309621,56352,20.39137,Europe,Europe & Central Asia
+United Kingdom,274.709,1750241,62033,18.50869564,Europe,Europe & Central Asia
+Georgia,65.197,174383,1614,15.06105563,Europe,Europe & Central Asia
+Greece,83.265,118045,3194,21.94147013,Europe,Europe & Central Asia
+Croatia,73.049,154852,2298,20.86014,Europe,Europe & Central Asia
+Hungary,107.981,259588,6280,19.69446,Europe,Europe & Central Asia
+Ireland,70.653,74682,2097,14.22283075,Europe,Europe & Central Asia
+Iceland,3.518,5506,28,15.19212107,Europe,Europe & Central Asia
+Italy,205.418,1757394,61240,23.01213665,Europe,Europe & Central Asia
+Lithuania,44.723,80556,704,20.15841271,Europe,Europe & Central Asia
+Luxembourg,250.185,38476,360,14.27494888,Europe,Europe & Central Asia
+Latvia,30.993,22104,288,20.336511,Europe,Europe & Central Asia
+Moldova,94.264,119204,2460,12.01311911,Europe,Europe & Central Asia
+North Macedonia,82.592,69452,1977,14.08542,Europe,Europe & Central Asia
+Malta,1514.469,10699,157,20.81717,Europe,Middle East & North Africa
+Montenegro,46.262,39153,549,15.38917207,Europe,Europe & Central Asia
+Netherlands,511.476,569747,9762,19.60531972,Europe,Europe & Central Asia
+Norway,14.548,38703,361,17.27267,Europe,Europe & Central Asia
+Poland,124.023,1076180,20592,18.11689725,Europe,Europe & Central Asia
+Portugal,112.262,325071,5041,22.35669,Europe,Europe & Central Asia
+Romania,84.634,524675,12660,18.79006579,Europe,Europe & Central Asia
+Russia,8.822,2515009,44159,15.09412523,Europe,Europe & Central Asia
+Serbia,79.838,234027,2062,18.74050342,Europe,Europe & Central Asia
+Slovakia,113.286,119232,1046,16.17236389,Europe,Europe & Central Asia
+Slovenia,102.964,87936,1311,20.18628,Europe,Europe & Central Asia
+Sweden,24.981,297732,7200,20.19857,Europe,Europe & Central Asia
+Turkey,106.96,552304,15314,8.726284,Europe,Europe & Central Asia
+Ukraine,77.03,832758,13928,16.70499,Europe,Europe & Central Asia
+Angola,24.713,15729,355,2.199342,Africa,Sub-Saharan Africa
+Burundi,435.178,716,1,2.312095,Africa,Sub-Saharan Africa
+Benin,101.854,3073,44,3.264885,Africa,Sub-Saharan Africa
+Burkina Faso,72.191,3469,69,2.407288,Africa,Sub-Saharan Africa
+Botswana,3.977,12058,36,4.365895,Africa,Sub-Saharan Africa
+Central African Republic,7.49,4927,63,2.81479,Africa,Sub-Saharan Africa
+Côte d’Ivoire,78.834,21513,132,2.873119,Africa,Sub-Saharan Africa
+Cameroon,53.344,24752,443,2.72365,Africa,Sub-Saharan Africa
+Congo - Kinshasa,37.083,13842,349,3.01694,Africa,Sub-Saharan Africa
+Congo - Brazzaville,15.357,5774,94,2.721416,Africa,Sub-Saharan Africa
+Comoros,447.244,617,7,3.055403,Africa,Sub-Saharan Africa
+Djibouti,41.368,5714,61,4.609064,Africa,Middle East & North Africa
+Algeria,17.73,89416,2539,6.552777882,Africa,Middle East & North Africa
+Egypt,98.873,119281,6813,5.276333,Africa,Middle East & North Africa
+Ethiopia,109.225,114266,1766,3.51669,Africa,Sub-Saharan Africa
+Gabon,8.225,9278,60,3.544727,Africa,Sub-Saharan Africa
+Ghana,130.821,52500,326,3.097322,Africa,Sub-Saharan Africa
+Guinea,50.522,13264,79,2.941906,Africa,Sub-Saharan Africa
+Gambia,225.307,3772,123,2.560925,Africa,Sub-Saharan Africa
+Guinea-Bissau,66.654,2442,44,2.86326,Africa,Sub-Saharan Africa
+Equatorial Guinea,46.666,5166,85,2.424509,Africa,Sub-Saharan Africa
+Kenya,90.299,89100,1545,2.423827,Africa,Sub-Saharan Africa
+Liberia,50.031,1676,83,3.285694,Africa,Sub-Saharan Africa
+Libya,3.796,87986,1255,4.458239,Africa,Middle East & North Africa
+Lesotho,69.438,2150,44,4.925826,Africa,Sub-Saharan Africa
+Morocco,80.729,384088,6370,7.300455,Africa,Middle East & North Africa
+Madagascar,45.14,17513,255,3.044064,Africa,Sub-Saharan Africa
+Mali,15.635,5290,175,2.495128,Africa,Sub-Saharan Africa
+Mozambique,37.509,16373,136,2.878446169,Africa,Sub-Saharan Africa
+Mauritania,4.272,9679,194,3.156244,Africa,Sub-Saharan Africa
+Mauritius,623.302,515,10,11.99873,Africa,Sub-Saharan Africa
+Malawi,192.441,6051,186,2.642024,Africa,Sub-Saharan Africa
+Namibia,2.974,15298,153,3.608054423,Africa,Sub-Saharan Africa
+Niger,17.718,1987,79,2.596711426,Africa,Sub-Saharan Africa
+Nigeria,215.065,70195,1182,2.743083,Africa,Sub-Saharan Africa
+Rwanda,498.66,6237,51,3.028253,Africa,Sub-Saharan Africa
+Sudan,,20084,1307,3.627317326,Africa,Sub-Saharan Africa
+Senegal,82.347,16553,340,3.098476,Africa,Sub-Saharan Africa
+Sierra Leone,105.987,2428,74,2.947737,Africa,Sub-Saharan Africa
+Somalia,23.923,4579,121,2.889204,Africa,Sub-Saharan Africa
+South Sudan,,3181,62,3.376805,Africa,Sub-Saharan Africa
+São Tomé & Príncipe,219.821,1005,17,2.960159,Africa,Sub-Saharan Africa
+Eswatini,66.058,6563,124,4.014789,Africa,Sub-Saharan Africa
+Seychelles,210.352,184,0,7.805482,Africa,Sub-Saharan Africa
+Chad,12.292,1729,102,2.491642,Africa,Sub-Saharan Africa
+Togo,145.047,3132,65,2.887348,Africa,Sub-Saharan Africa
+Tunisia,74.441,105445,3668,8.593468556,Africa,Middle East & North Africa
+Tanzania,63.579,509,21,2.620541,Africa,Sub-Saharan Africa
+Uganda,213.062,23860,207,1.962550187,Africa,Sub-Saharan Africa
+South Africa,47.63,821889,22432,5.415255608,Africa,Sub-Saharan Africa
+Zambia,23.341,17963,364,2.115315,Africa,Sub-Saharan Africa
+Zimbabwe,37.325,10912,303,2.980608,Africa,Sub-Saharan Africa

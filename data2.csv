@@ -1,0 +1,48 @@
+﻿country,pop_density,cases_cum,deaths_cum,old_perc,continent,region,income
+United Arab Emirates,118,157785,548,1.157,Asia,Middle East & North Africa,High income
+Qatar,239.59,137062,235,1.523,Asia,Middle East & North Africa,High income
+Oman,16,121360,1365,2.449,Asia,Middle East & North Africa,High income
+Bahrain,2239,85591,338,2.519,Asia,Middle East & North Africa,High income
+Afghanistan,60,44519,1687,2.616,Asia,South Asia,Low income
+Kuwait,240,139734,863,2.764,Asia,Middle East & North Africa,High income
+Yemen,56,2093,608,2.902,Asia,Middle East & North Africa,Low income
+Palestinian Territories,847,82780,698,3,Asia,Middle East & North Africa,Middle income
+Tajikistan,68,11854,86,3.086,Asia,Central Asia,Middle income
+Iraq,93,533555,11925,3.399,Asia,Middle East & North Africa,Middle income
+Saudi Arabia,15.68,355034,5761,3.413,Asia,Middle East & North Africa,High income
+Papua New Guinea,19,604,7,3.509,Oceania,East Asia & Pacific,Low income
+Vanuatu,25,1,0,3.6,Oceania,East Asia & Pacific,Middle income
+Solomon Islands,25,16,0,3.631,Oceania,East Asia & Pacific,Low income
+Jordan,115,178161,2172,3.893,Asia,Middle East & North Africa,Middle income
+Timor-Leste,89,30,0,4.06,Asia,East Asia & Pacific,Low income
+Laos,31,24,0,4.164,Asia,East Asia & Pacific,Middle income
+Mongolia,2,608,0,4.189,Asia,East Asia & Pacific,Middle income
+Pakistan,256,374173,7662,4.322,Asia,South Asia,Middle income
+Uzbekistan,79,71280,603,4.595,Asia,Central Asia,Middle income
+Kyrgyzstan,34,69581,1231,4.6,Asia,Central Asia,Middle income
+Syria,95,7154,372,4.692,Asia,Middle East & North Africa,Low income
+Cambodia,92,306,0,4.718,Asia,East Asia & Pacific,Middle income
+Bangladesh,1265,445281,6350,5.18,Asia,South Asia,Middle income
+Brunei,81,148,3,5.209,Asia,East Asia & Pacific,High income
+Philippines,358,416852,8080,5.315,Asia,East Asia & Pacific,Middle income
+Fiji,49,35,3,5.624,Oceania,East Asia & Pacific,Middle income
+Nepal,196,218639,1305,5.783,Asia,South Asia,Low income
+Myanmar (Burma),83,77848,1722,6.012,Asia,East Asia & Pacific,Middle income
+Indonesia,147.75,493308,15774,6.05,Asia,East Asia & Pacific,Middle income
+Bhutan,20,379,0,6.093,Asia,South Asia,Middle income
+Iran,52,841308,44327,6.359,Asia,Middle East & North Africa,Middle income
+India,382,9095806,133227,6.378,Asia,South Asia,Middle income
+Malaysia,95.96,53679,332,6.921,Asia,East Asia & Pacific,Middle income
+Lebanon,667,115283,894,7.273,Asia,Middle East & North Africa,Middle income
+Vietnam,160,1306,35,7.554,Asia,East Asia & Pacific,Middle income
+Kazakhstan,7,168838,2370,7.652,Asia,Central Asia,Middle income
+New Caledonia,16,32,0,9.427,Oceania,East Asia & Pacific,Middle income
+Sri Lanka,346,19771,83,10.839,Asia,South Asia,Middle income
+China,153,91720,4739,11.472,Asia,East Asia & Pacific,High income
+Israel,400,328397,2757,12.209,Asia,Middle East & North Africa,High income
+Singapore,8358,58148,28,12.393,Asia,East Asia & Pacific,High income
+Thailand,136,3913,60,12.406,Asia,East Asia & Pacific,Middle income
+South Korea,515,30733,505,15.02,Asia,East Asia & Pacific,High income
+Australia,3.2,27807,907,15.921,Oceania,East Asia & Pacific,High income
+New Zealand,15,1672,25,15.994,Oceania,East Asia & Pacific,High income
+Japan,347.07,130179,1974,28.002,Asia,East Asia & Pacific,High income
