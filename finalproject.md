@@ -2663,4 +2663,13 @@ Source: Migration data relevant for the COVID-19 pandemic
 
 <https://migrationdataportal.org/themen/migration-data-relevant-covid-19-pandemic>
 
+Source: Johns Hopkins Coronavirus Resource Center. 2020. Mortality
+Analyses - Johns Hopkins Coronavirus Resource Center.
+
+<https://coronavirus.jhu.edu/data/mortality>
+
+Source: United Nations, S., 2020. United Nations World Data Forum.
+
+<https://unstats.un.org/unsd/undataforum/blog/Older-people-and-age-disaggregated-COVID-19-mortality/>
+
 -----
